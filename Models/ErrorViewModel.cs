@@ -1,6 +1,6 @@
 using System;
 
-namespace SchedulerApp.Models
+namespace SchedulerModels
 {
     public class ErrorViewModel
     {

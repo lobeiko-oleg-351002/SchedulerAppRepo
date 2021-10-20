@@ -3,8 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using SchedulerModels;
 
-namespace SchedulerApp.Data
+namespace SchedulerMigrations.Data
 {
     public class ApplicationDbContext : IdentityDbContext
     {
@@ -12,5 +13,7 @@ namespace SchedulerApp.Data
             : base(options)
         {
         }
+        public DbSet<SchedulerModels.Chief> Chief { get; set; }
+        public DbSet<SchedulerModels.Event> Event { get; set; }
     }
 }
