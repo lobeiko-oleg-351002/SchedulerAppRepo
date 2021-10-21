@@ -3,17 +3,14 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace SchedulerModels
 {
-    public class Chief : Student
+    public class SingleEvent : Event
     {
         [Required]
-        public string Profile { get; set; }
-
-        public List<Student> Students { get; set; }
-
-        public List<EventTemplate> EventTemplates { get; set; }
+        public DateTime DateAndTime { get; set; }
     }
 }

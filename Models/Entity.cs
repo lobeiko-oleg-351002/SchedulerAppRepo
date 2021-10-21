@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace SchedulerModels
 {
-    public abstract class Event : EventTemplate
+    public abstract class Entity
     {
-        public List<Subscriber> Subscribers { get; set; }
+        [Key, Required]
+        public Guid Id { get; set; }
     }
 }

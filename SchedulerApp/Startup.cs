@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using SchedulerApp.Data;
+using SchedulerMigrations.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,12 +27,11 @@ namespace SchedulerApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<SchedulerDbContext>(options =>
+                options.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=aspnet-SchedulerApp-53bc9b9d-9d6a-45d4-8429-2a2761773502;Trusted_Connection=True;MultipleActiveResultSets=true"));
             services.AddDatabaseDeveloperPageExceptionFilter();
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+                .AddEntityFrameworkStores<SchedulerDbContext>();
             services.AddRazorPages();
         }
 
