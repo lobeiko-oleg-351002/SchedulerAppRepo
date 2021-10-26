@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace SchedulerModels
 {
+    [Table("EventTemplate")]
     public class EventTemplate : Entity
     {
         [Required]

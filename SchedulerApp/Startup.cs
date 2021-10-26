@@ -1,3 +1,9 @@
+using BLL.Converters;
+using BLL.Converters.Interface;
+using BLL.Services;
+using BLL.Services.Interface;
+using DAL.Repositories;
+using DAL.Repositories.Interface;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -7,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
 using SchedulerMigrations.Data;
 using System;
 using System.Collections.Generic;
@@ -33,6 +40,25 @@ namespace SchedulerApp
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<SchedulerDbContext>();
             services.AddRazorPages();
+
+            services.AddControllers();
+            services.AddScoped<IStudentRepository, StudentRepository>();
+            services.AddScoped<IStudentConverter, StudentConverter>();
+            services.AddScoped<IStudentService, StudentService>();
+
+            services.AddScoped<IChiefRepository, ChiefRepository>();
+            services.AddScoped<IChiefConverter, ChiefConverter>();
+            services.AddScoped<IChiefService, ChiefService>();
+
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Version = "v1",
+                    Title = "ToDo API",
+                    Description = "A simple example ASP.NET Core Web API",
+                });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -41,26 +67,25 @@ namespace SchedulerApp
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseMigrationsEndPoint();
-            }
-            else
-            {
-                app.UseExceptionHandler("/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
             }
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
-            app.UseRouting();
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("swagger/v1/swagger.json", "API V1");
+                c.RoutePrefix = string.Empty;
+            });
 
-            app.UseAuthentication();
-            app.UseAuthorization();
+            app.UseRouting();
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapRazorPages();
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
             });
         }
     }

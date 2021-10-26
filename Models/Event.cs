@@ -7,8 +7,12 @@ using System.Threading.Tasks;
 
 namespace SchedulerModels
 {
-    public abstract class Event : EventTemplate
+    [Table("Event")]
+    public class Event : Entity
     {
+        public EventTemplate EventTemplate { get; set; }
         public List<Subscriber> Subscribers { get; set; }
+
+        public Chief Chief { get; set; }
     }
 }

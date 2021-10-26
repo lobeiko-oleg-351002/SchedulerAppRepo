@@ -4,4 +4,10 @@
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\DAL\DAL.csproj" />
+    <ProjectReference Include="..\Models\SchedulerModels.csproj" />
+    <ProjectReference Include="..\SchedulerViewModels\SchedulerViewModels.csproj" />
+  </ItemGroup>
+
 </Project>

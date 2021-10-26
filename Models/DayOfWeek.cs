@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace SchedulerModels
 {
+    [Table("DayOfWeek")]
     public class DayOfWeek : Entity
     {
         [Required]

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace SchedulerModels
 {
+    [Table("SingleEvent")]
     public class SingleEvent : Event
     {
         [Required]

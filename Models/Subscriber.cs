@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace SchedulerModels
 {
+    [Table("Subscriber")]
     public class Subscriber : Entity
     {
         [Required]

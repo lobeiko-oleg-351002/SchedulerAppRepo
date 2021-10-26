@@ -66,39 +66,60 @@ namespace SchedulerMigrations.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("a20f009f-c7a2-41c3-b975-fea70be55d89"),
+                            Id = new Guid("c177818c-ec63-4ce6-a8c9-725da08fdc46"),
                             Name = "Monday"
                         },
                         new
                         {
-                            Id = new Guid("d5350a05-2b79-42dc-ba57-bc4f9c1b33ac"),
+                            Id = new Guid("6164bcfb-31f0-42c7-a6b7-1324aefd150b"),
                             Name = "Tuesday"
                         },
                         new
                         {
-                            Id = new Guid("6e4685a4-8745-44d4-abba-e8272b6a1894"),
+                            Id = new Guid("c9d300a6-dc45-4e03-945f-a36c949874ce"),
                             Name = "Wednesday"
                         },
                         new
                         {
-                            Id = new Guid("c62897d0-9e2a-4249-bccd-fe976e5a57fb"),
+                            Id = new Guid("97e766e6-c8b0-49c8-81b8-42b736ac3b56"),
                             Name = "Thursday"
                         },
                         new
                         {
-                            Id = new Guid("6a668739-2109-4117-a0db-b18dd13577f1"),
+                            Id = new Guid("99063a5d-b63a-4e6b-b3a4-f0765b34a65c"),
                             Name = "Friday"
                         },
                         new
                         {
-                            Id = new Guid("16dd7964-9272-4943-a75c-40fd66ee268a"),
+                            Id = new Guid("72245cae-9fbe-439a-a073-2e83736a1d26"),
                             Name = "Saturday"
                         },
                         new
                         {
-                            Id = new Guid("e2581347-520c-442e-94ad-919669203084"),
+                            Id = new Guid("1a4571de-c60c-44d2-8caa-688704fbaefd"),
                             Name = "Sunday"
                         });
+                });
+
+            modelBuilder.Entity("SchedulerModels.Event", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("ChiefId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("EventTemplateId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ChiefId");
+
+                    b.HasIndex("EventTemplateId");
+
+                    b.ToTable("Event");
                 });
 
             modelBuilder.Entity("SchedulerModels.EventTemplate", b =>
@@ -150,14 +171,14 @@ namespace SchedulerMigrations.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("b23cf592-7c89-485d-b1fd-a746f7c5a3a7"),
+                            Id = new Guid("55d6a505-6d48-4dd4-9cf4-0bef15761ca1"),
                             Email = "normandy@gmail.com",
                             Name = "John",
                             Password = "shepard2072"
                         },
                         new
                         {
-                            Id = new Guid("801be765-0711-4a51-81ec-633982fa5ac3"),
+                            Id = new Guid("75057fa2-84ce-4f20-b411-f3405ccd9b0d"),
                             Email = "eugene@gmail.com",
                             Name = "Raynor",
                             Password = "raiders44"
@@ -207,42 +228,6 @@ namespace SchedulerMigrations.Migrations
                     b.ToTable("WeeklyEventTime");
                 });
 
-            modelBuilder.Entity("SchedulerModels.Event", b =>
-                {
-                    b.HasBaseType("SchedulerModels.EventTemplate");
-
-                    b.ToTable("Event");
-                });
-
-            modelBuilder.Entity("SchedulerModels.Chief", b =>
-                {
-                    b.HasBaseType("SchedulerModels.Student");
-
-                    b.Property<string>("Profile")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.ToTable("Chief");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("bd6d6b50-fdb4-4aa2-91e7-1072bf6312e4"),
-                            Email = "totalit280@gmail.com",
-                            Name = "Totalit",
-                            Password = "vitebsk2021",
-                            Profile = "Discussion Club"
-                        },
-                        new
-                        {
-                            Id = new Guid("20e220d5-25d1-4a83-9197-2210cd55dfaa"),
-                            Email = "mlarsm@gmail.com",
-                            Name = "Lars Ulrich",
-                            Password = "drumdrum",
-                            Profile = "Drum Club"
-                        });
-                });
-
             modelBuilder.Entity("SchedulerModels.SingleEvent", b =>
                 {
                     b.HasBaseType("SchedulerModels.Event");
@@ -258,6 +243,35 @@ namespace SchedulerMigrations.Migrations
                     b.HasBaseType("SchedulerModels.Event");
 
                     b.ToTable("WeeklyEvent");
+                });
+
+            modelBuilder.Entity("SchedulerModels.Chief", b =>
+                {
+                    b.HasBaseType("SchedulerModels.Student");
+
+                    b.Property<string>("Profile")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.ToTable("Chief");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("7db454ca-6345-4d17-a630-fa725e612b07"),
+                            Email = "totalit280@gmail.com",
+                            Name = "Totalit",
+                            Password = "vitebsk2021",
+                            Profile = "Discussion Club"
+                        },
+                        new
+                        {
+                            Id = new Guid("5ce9045b-ccd6-4dbd-9afe-aabd5706de03"),
+                            Email = "mlarsm@gmail.com",
+                            Name = "Lars Ulrich",
+                            Password = "drumdrum",
+                            Profile = "Drum Club"
+                        });
                 });
 
             modelBuilder.Entity("ChiefStudent", b =>
@@ -288,6 +302,21 @@ namespace SchedulerMigrations.Migrations
                         .HasForeignKey("WeeklyEventTimesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("SchedulerModels.Event", b =>
+                {
+                    b.HasOne("SchedulerModels.Chief", "Chief")
+                        .WithMany("Events")
+                        .HasForeignKey("ChiefId");
+
+                    b.HasOne("SchedulerModels.EventTemplate", "EventTemplate")
+                        .WithMany()
+                        .HasForeignKey("EventTemplateId");
+
+                    b.Navigation("Chief");
+
+                    b.Navigation("EventTemplate");
                 });
 
             modelBuilder.Entity("SchedulerModels.EventTemplate", b =>
@@ -321,24 +350,6 @@ namespace SchedulerMigrations.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("SchedulerModels.Event", b =>
-                {
-                    b.HasOne("SchedulerModels.EventTemplate", null)
-                        .WithOne()
-                        .HasForeignKey("SchedulerModels.Event", "Id")
-                        .OnDelete(DeleteBehavior.ClientCascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("SchedulerModels.Chief", b =>
-                {
-                    b.HasOne("SchedulerModels.Student", null)
-                        .WithOne()
-                        .HasForeignKey("SchedulerModels.Chief", "Id")
-                        .OnDelete(DeleteBehavior.ClientCascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("SchedulerModels.SingleEvent", b =>
                 {
                     b.HasOne("SchedulerModels.Event", null)
@@ -357,9 +368,13 @@ namespace SchedulerMigrations.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("SchedulerModels.Student", b =>
+            modelBuilder.Entity("SchedulerModels.Chief", b =>
                 {
-                    b.Navigation("Subscribers");
+                    b.HasOne("SchedulerModels.Student", null)
+                        .WithOne()
+                        .HasForeignKey("SchedulerModels.Chief", "Id")
+                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("SchedulerModels.Event", b =>
@@ -367,14 +382,21 @@ namespace SchedulerMigrations.Migrations
                     b.Navigation("Subscribers");
                 });
 
-            modelBuilder.Entity("SchedulerModels.Chief", b =>
+            modelBuilder.Entity("SchedulerModels.Student", b =>
                 {
-                    b.Navigation("EventTemplates");
+                    b.Navigation("Subscribers");
                 });
 
             modelBuilder.Entity("SchedulerModels.WeeklyEvent", b =>
                 {
                     b.Navigation("DateAndTime");
+                });
+
+            modelBuilder.Entity("SchedulerModels.Chief", b =>
+                {
+                    b.Navigation("Events");
+
+                    b.Navigation("EventTemplates");
                 });
 #pragma warning restore 612, 618
         }

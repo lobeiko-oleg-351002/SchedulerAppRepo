@@ -1,0 +1,14 @@
+﻿using SchedulerViewModels;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace BLL.Converters.Interface
+{
+    public interface IDayOfWeekConverter : IConverter<SchedulerModels.DayOfWeek, DayOfWeekViewModel>
+    {
+
+    }
+}

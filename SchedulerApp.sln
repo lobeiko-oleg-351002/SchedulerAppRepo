@@ -11,6 +11,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SchedulerMigrations", "Sche
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BLL", "BLL\BLL.csproj", "{4DD1E92D-4010-40A8-8C31-2225B6760C7F}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DAL", "DAL\DAL.csproj", "{F77E9B6E-A017-421C-949D-4CD4629E4178}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SchedulerViewModels", "SchedulerViewModels\SchedulerViewModels.csproj", "{0B111C3D-185F-4DD5-89B8-9745014D568C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +37,14 @@ Global
 		{4DD1E92D-4010-40A8-8C31-2225B6760C7F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4DD1E92D-4010-40A8-8C31-2225B6760C7F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4DD1E92D-4010-40A8-8C31-2225B6760C7F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F77E9B6E-A017-421C-949D-4CD4629E4178}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F77E9B6E-A017-421C-949D-4CD4629E4178}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F77E9B6E-A017-421C-949D-4CD4629E4178}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F77E9B6E-A017-421C-949D-4CD4629E4178}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0B111C3D-185F-4DD5-89B8-9745014D568C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B111C3D-185F-4DD5-89B8-9745014D568C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0B111C3D-185F-4DD5-89B8-9745014D568C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0B111C3D-185F-4DD5-89B8-9745014D568C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

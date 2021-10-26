@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace SchedulerModels
 {
+    [Table("WeeklyEventTime")]
     public class WeeklyEventTime : Entity
     {
         [Required]

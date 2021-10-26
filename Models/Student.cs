@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace SchedulerModels
 {
+    [Table("Student")]
     public class Student : Entity
     {
         [Required]
@@ -21,5 +22,6 @@ namespace SchedulerModels
         public List<Subscriber> Subscribers { get; set; }
 
         public List<Chief> Chiefs { get; set; }
+
     }
 }
