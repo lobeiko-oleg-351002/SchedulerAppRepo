@@ -28,5 +28,13 @@ namespace SchedulerApp.Controllers
             ChiefService.Create(userModel);
             return Ok(userModel);
         }
+
+        [HttpGet]
+        [Route("{id}")]
+        public IActionResult Get(Guid id)
+        {
+            var result = ChiefService.Get(id);
+            return Ok(result);
+        }
     }
 }

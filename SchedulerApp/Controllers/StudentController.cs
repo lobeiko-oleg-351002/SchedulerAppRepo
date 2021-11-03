@@ -23,10 +23,24 @@ namespace SchedulerApp.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateUser(StudentViewModel userModel)
+        public IActionResult CreateUser(StudentViewModel studentModel)
         {
-            StudentService.Create(userModel);
-            return Ok(userModel);
+            StudentService.Create(studentModel);
+            return Ok(studentModel);
+        }
+
+        [HttpGet]
+        public IActionResult GetAll()
+        {
+            var result = StudentService.GetAll();
+            return Ok(result);
+        }
+
+        [HttpPut]
+        public IActionResult UpdateUser(StudentViewModel studentModel)
+        {
+            StudentService.Update(studentModel);
+            return new OkResult();
         }
     }
 }
