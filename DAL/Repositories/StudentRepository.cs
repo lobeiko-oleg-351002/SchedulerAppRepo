@@ -1,4 +1,5 @@
-﻿using DAL.Repositories.Interface;
+﻿using DAL.Exceptions;
+using DAL.Repositories.Interface;
 using SchedulerMigrations.Data;
 using SchedulerModels;
 using System;
@@ -14,6 +15,12 @@ namespace DAL.Repositories
         public StudentRepository(SchedulerDbContext context) : base(context)
         {
 
+        }
+
+        public Student GetByNameAndPassword(string name, string password)
+        {
+            var entity = Context.Set<Student>().FirstOrDefault(e => (e.Name == name) && (e.Password == password));
+            return entity ?? throw new ItemNotFoundException();
         }
     }
 }

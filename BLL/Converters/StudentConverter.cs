@@ -18,7 +18,8 @@ namespace BLL.Converters
                 Id = model.Id,
                 Email = model.Email,
                 Password = model.Password,
-                Name = model.Name
+                Name = model.Name, 
+                Role = model.Role
             };
             return result;
         }
@@ -30,7 +31,8 @@ namespace BLL.Converters
                 Id = entity.Id,
                 Email = entity.Email,
                 Password = entity.Password,
-                Name = entity.Name
+                Name = entity.Name,
+                Role = entity.Role
             };
             return result;
         }

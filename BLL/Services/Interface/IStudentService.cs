@@ -10,6 +10,6 @@ namespace BLL.Services.Interface
 {
     public interface IStudentService : IService<StudentViewModel>
     {
-
+        public StudentViewModel GetByNameAndPassword(string name, string password);
     }
 }

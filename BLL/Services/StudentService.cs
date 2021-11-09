@@ -19,5 +19,9 @@ namespace BLL.Services
 
         }
 
+        public StudentViewModel GetByNameAndPassword(string name, string password)
+        {
+            return Converter.ConvertToViewModel(((IStudentRepository)Repository).GetByNameAndPassword(name, password));
+        }
     }
 }

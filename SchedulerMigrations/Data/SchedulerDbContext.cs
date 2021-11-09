@@ -43,6 +43,7 @@ namespace SchedulerMigrations.Data
             });
 
             modelBuilder.ApplyConfiguration(new DayOfWeekConfiguration());
+            modelBuilder.ApplyConfiguration(new RoleConfiguration());
             modelBuilder.ApplyConfiguration(new ChiefConfiguration());
             modelBuilder.ApplyConfiguration(new StudentConfiguration());
         }
