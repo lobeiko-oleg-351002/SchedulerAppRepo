@@ -1,4 +1,5 @@
 ﻿using BLL.Services.Interface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SchedulerViewModels;
@@ -29,6 +30,7 @@ namespace SchedulerApp.Controllers
             return Ok(studentModel);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public IActionResult GetAll()
         {

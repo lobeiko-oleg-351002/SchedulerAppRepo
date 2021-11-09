@@ -19,7 +19,7 @@ namespace DAL.Repositories
             Context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public TEntity Create(TEntity entity)
+        public virtual TEntity Create(TEntity entity)
         {
             var result = Context.Set<TEntity>().Add(entity).Entity;
             Context.SaveChanges();
@@ -33,13 +33,13 @@ namespace DAL.Repositories
             Context.SaveChanges();
         }
 
-        public TEntity Get(Guid id)
+        public virtual TEntity Get(Guid id)
         {
             var entity = Context.Set<TEntity>().FirstOrDefault(e => e.Id == id);
             return entity ?? throw new ItemNotFoundException();
         }
 
-        public List<TEntity> GetAll()
+        public virtual List<TEntity> GetAll()
         {
             var elements = Context.Set<TEntity>().Select(e => e);
             if (elements.Any())

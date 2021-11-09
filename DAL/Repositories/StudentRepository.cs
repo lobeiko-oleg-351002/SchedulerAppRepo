@@ -1,5 +1,6 @@
 ﻿using DAL.Exceptions;
 using DAL.Repositories.Interface;
+using Microsoft.EntityFrameworkCore;
 using SchedulerMigrations.Data;
 using SchedulerModels;
 using System;
@@ -19,8 +20,24 @@ namespace DAL.Repositories
 
         public Student GetByNameAndPassword(string name, string password)
         {
-            var entity = Context.Set<Student>().FirstOrDefault(e => (e.Name == name) && (e.Password == password));
+            var entity = Context.Students.Include(role => role.Role).FirstOrDefault(e => (e.Name == name) && (e.Password == password));
             return entity ?? throw new ItemNotFoundException();
+        }
+
+        public override Student Get(Guid id)
+        {
+            Student student = Context.Students.Include(role => role.Role).FirstOrDefault(user => user.Id == id);
+            return student;
+        }
+
+        public override List<Student> GetAll()
+        {
+            var elements = Context.Students.Include(role => role.Role).Select(e => e);
+            if (elements.Any())
+            {
+                return elements.ToList();
+            }
+            else throw new NoElementsException();
         }
     }
 }

@@ -23,8 +23,8 @@ namespace SchedulerApp.Controllers
             StudentService = studentService;
         }
 
-        [HttpPost("/token")]
-        public IActionResult Token(string username, string password)
+        [HttpPost]
+        public IActionResult Authentificate(string username, string password)
         {
             var identity = GetIdentity(username, password);
             if (identity == null)

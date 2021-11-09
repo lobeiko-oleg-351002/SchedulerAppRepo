@@ -23,6 +23,7 @@ namespace SchedulerMigrations.Data
         public DbSet<Subscriber> Subscribers { get; set; }
         public DbSet<WeeklyEvent> WeeklyEvents { get; set; }
         public DbSet<WeeklyEventTime> WeeklyEventTimes { get; set; }
+        public DbSet<Role> Roles { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

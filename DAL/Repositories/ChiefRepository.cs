@@ -26,5 +26,13 @@ namespace DAL.Repositories
             }
             else throw new NoElementsException();
         }
+
+        public override Chief Create(Chief entity)
+        {
+            entity.Role = Context.Roles.FirstOrDefault(role => role.Id == entity.Role.Id);
+            var result = Context.Set<Chief>().Add(entity).Entity;
+            Context.SaveChanges();
+            return result;
+        }
     }
 }
