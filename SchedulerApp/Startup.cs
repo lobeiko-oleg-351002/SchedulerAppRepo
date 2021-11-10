@@ -22,6 +22,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using SchedulerApp.AuthorizationTokens;
+using SchedulerApp.Middleware;
 
 namespace SchedulerApp
 {
@@ -61,6 +62,27 @@ namespace SchedulerApp
                     Title = "ToDo API",
                     Description = "A simple example ASP.NET Core Web API",
                 });
+                var securityScheme = new OpenApiSecurityScheme
+                {
+                    Name = "JWT Authentication",
+                    Description = "Enter JWT Bearer token **_only_**",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "bearer", // must be lower case
+                    BearerFormat = "JWT",
+                    Reference = new OpenApiReference
+                    {
+                        Id = JwtBearerDefaults.AuthenticationScheme,
+                        Type = ReferenceType.SecurityScheme
+                    }
+                };
+                c.AddSecurityDefinition(securityScheme.Reference.Id, securityScheme);
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                    {
+                        {
+                            securityScheme, Array.Empty<string>()
+                        }
+                    });
             });
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -69,22 +91,13 @@ namespace SchedulerApp
                         options.RequireHttpsMetadata = false;
                         options.TokenValidationParameters = new TokenValidationParameters
                         {
-                            // укзывает, будет ли валидироваться издатель при валидации токена
-                            ValidateIssuer = true,
-                            // строка, представляющая издателя
+                            ValidateIssuer = false,
                             ValidIssuer = AuthOptions.ISSUER,
-
-                            // будет ли валидироваться потребитель токена
-                            ValidateAudience = true,
-                            // установка потребителя токена
+                            ValidateAudience = false,
                             ValidAudience = AuthOptions.AUDIENCE,
-                            // будет ли валидироваться время существования
-                            ValidateLifetime = true,
-
-                            // установка ключа безопасности
+                            ValidateLifetime = false,
                             IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
-                            // валидация ключа безопасности
-                            ValidateIssuerSigningKey = true,
+                            ValidateIssuerSigningKey = false,
                         };
                     });
         }
@@ -111,6 +124,8 @@ namespace SchedulerApp
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseMiddleware<JWTMiddleware>();
 
             app.UseEndpoints(endpoints =>
             {

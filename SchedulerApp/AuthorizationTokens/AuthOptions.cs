@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace SchedulerApp.AuthorizationTokens
 {
-    public class AuthOptions
+    public static class AuthOptions
     {
         public const string ISSUER = "SchedulerAuthServer"; 
         public const string AUDIENCE = "SchedulerAuthClient"; 
-        const string KEY = "mysupersecret_secretkey!123";   
-        public const int LIFETIME = 1;
+        public const string KEY = "mysupersecret_secretkey!123";   
+        public const int LIFETIME = 10;
         public static SymmetricSecurityKey GetSymmetricSecurityKey()
         {
             return new SymmetricSecurityKey(Encoding.ASCII.GetBytes(KEY));

@@ -26,50 +26,34 @@ namespace SchedulerApp.Controllers
         [HttpPost]
         public IActionResult Authentificate(string username, string password)
         {
-            var identity = GetIdentity(username, password);
-            if (identity == null)
+            StudentViewModel student = StudentService.GetByNameAndPassword(username, password);
+            if (student == null)
             {
                 return BadRequest(new { errorText = "Invalid username or password." });
             }
 
-            var now = DateTime.UtcNow;
-            // создаем JWT-токен
-            var jwt = new JwtSecurityToken(
-                    issuer: AuthOptions.ISSUER,
-                    audience: AuthOptions.AUDIENCE,
-                    notBefore: now,
-                    claims: identity.Claims,
-                    expires: now.Add(TimeSpan.FromMinutes(AuthOptions.LIFETIME)),
-                    signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
-            var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new Claim[]
+                {
+                    new Claim(ClaimTypes.Name, $"User"),
+                    new Claim(ClaimTypes.NameIdentifier, student.Id.ToString()),
+                    new Claim(ClaimTypes.Email, student.Email),
+                    new Claim(ClaimTypes.Role, student.Role.Name),
+                }),
+                Expires = DateTime.UtcNow.AddDays(7),
+                SigningCredentials = new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256Signature)
+            };
+            var token = tokenHandler.CreateToken(tokenDescriptor);
 
             var response = new
             {
-                access_token = encodedJwt,
-                username = identity.Name
+                access_token = tokenHandler.WriteToken(token),
+                username = student.Name
             };
 
             return Ok(response);
-        }
-
-        private ClaimsIdentity GetIdentity(string username, string password)
-        {
-            StudentViewModel student = StudentService.GetByNameAndPassword(username, password);
-            if (student != null)
-            {
-                var claims = new List<Claim>
-                {
-                    new Claim(ClaimsIdentity.DefaultNameClaimType, student.Name),
-                    new Claim(ClaimsIdentity.DefaultRoleClaimType, student.Role.Name)
-                };
-                ClaimsIdentity claimsIdentity =
-                new ClaimsIdentity(claims, "Token", ClaimsIdentity.DefaultNameClaimType,
-                    ClaimsIdentity.DefaultRoleClaimType);
-                return claimsIdentity;
-            }
-
-            // если пользователя не найдено
-            return null;
         }
     }
 }
