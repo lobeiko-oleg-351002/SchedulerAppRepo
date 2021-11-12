@@ -36,29 +36,13 @@ namespace SchedulerApp.Middleware
         private void attachUserToContext(HttpContext context, IStudentService studentService, string token)
         {
             JwtSecurityTokenHandler TokenHandler = new JwtSecurityTokenHandler();
-            TokenHandler.ValidateToken(token, new TokenValidationParameters
-            {
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
-                ValidateIssuer = false,
-                ValidateAudience = false,
-                // set clockskew to zero so tokens expire exactly at token expiration time (instead of 5 minutes later)
-                ClockSkew = TimeSpan.Zero
-            }, out SecurityToken validatedToken);
+            TokenHandler.ValidateToken(token, AuthOptions.CreateValidationParameters(), out SecurityToken validatedToken);
 
             JwtSecurityToken jwtToken = (JwtSecurityToken)validatedToken;
             var userId = Guid.Parse(jwtToken.Claims.First(x => x.Type == "nameid").Value);
             StudentViewModel identity = studentService.Get(userId);
 
-            var user = new ClaimsPrincipal(
-                new ClaimsIdentity(new Claim[]
-                {
-                    new Claim(ClaimTypes.Name, $"User: {token}"),
-                    new Claim(ClaimTypes.NameIdentifier, identity.Id.ToString()),
-                    new Claim(ClaimTypes.Email, identity.Email),
-                    //new Claim("isVerified", identity.IsVerified),
-                    new Claim(ClaimTypes.Role, identity.Role.Name),
-                }, "tokenAuthorization"));
+            var user = new ClaimsPrincipal(AuthOptions.CreateClaimsIdentity(identity, token));
             context.User = user;
         }
     }

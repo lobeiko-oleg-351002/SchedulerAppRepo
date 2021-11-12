@@ -35,14 +35,7 @@ namespace SchedulerApp.Controllers
             var tokenHandler = new JwtSecurityTokenHandler();
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new Claim[]
-                {
-                    new Claim(ClaimTypes.Name, $"User"),
-                    new Claim(ClaimTypes.NameIdentifier, student.Id.ToString()),
-                    new Claim(ClaimTypes.Email, student.Email),
-                    new Claim(ClaimTypes.Role, student.Role.Name),
-                }),
-                Expires = DateTime.UtcNow.AddDays(7),
+                Subject = AuthOptions.CreateClaimsIdentity(student),
                 SigningCredentials = new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);

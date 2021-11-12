@@ -1,7 +1,9 @@
 ﻿using Microsoft.IdentityModel.Tokens;
+using SchedulerViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -9,13 +11,49 @@ namespace SchedulerApp.AuthorizationTokens
 {
     public static class AuthOptions
     {
-        public const string ISSUER = "SchedulerAuthServer"; 
-        public const string AUDIENCE = "SchedulerAuthClient"; 
-        public const string KEY = "mysupersecret_secretkey!123";   
-        public const int LIFETIME = 10;
+        private const string ISSUER = "SchedulerAuthServer";
+        private const string AUDIENCE = "SchedulerAuthClient";
+        private const string KEY = "mysupersecret_secretkey!123";
+        private const int LIFETIME = 10;
         public static SymmetricSecurityKey GetSymmetricSecurityKey()
         {
             return new SymmetricSecurityKey(Encoding.ASCII.GetBytes(KEY));
+        }
+
+        public static TokenValidationParameters CreateValidationParameters()
+        {
+            return new TokenValidationParameters
+            {
+                ValidateIssuer = false,
+                ValidIssuer = ISSUER,
+                ValidateAudience = false,
+                ValidAudience = AUDIENCE,
+                ValidateLifetime = false,
+                IssuerSigningKey = GetSymmetricSecurityKey(),
+                ValidateIssuerSigningKey = true,
+                ClockSkew = TimeSpan.Zero
+            };
+        }
+
+        public static ClaimsIdentity CreateClaimsIdentity(StudentViewModel student)
+        {
+            return NewClaimsIdentity(student, "User");
+        }
+
+        public static ClaimsIdentity CreateClaimsIdentity(StudentViewModel student, string token)
+        {
+            return NewClaimsIdentity(student, $"User: {token}");
+        }
+
+        private static ClaimsIdentity NewClaimsIdentity(StudentViewModel student, string user)
+        {
+            return new ClaimsIdentity(new Claim[]
+            {
+                new Claim(ClaimTypes.Name, user),
+                new Claim(ClaimTypes.NameIdentifier, student.Id.ToString()),
+                new Claim(ClaimTypes.Email, student.Email),
+                new Claim(ClaimTypes.Role, student.Role.Name),
+            }, "tokenAuthorization");
         }
     }
 }

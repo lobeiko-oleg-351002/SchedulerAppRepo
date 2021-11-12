@@ -89,16 +89,7 @@ namespace SchedulerApp
                     .AddJwtBearer(options =>
                     {
                         options.RequireHttpsMetadata = false;
-                        options.TokenValidationParameters = new TokenValidationParameters
-                        {
-                            ValidateIssuer = false,
-                            ValidIssuer = AuthOptions.ISSUER,
-                            ValidateAudience = false,
-                            ValidAudience = AuthOptions.AUDIENCE,
-                            ValidateLifetime = false,
-                            IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
-                            ValidateIssuerSigningKey = false,
-                        };
+                        options.TokenValidationParameters = AuthOptions.CreateValidationParameters();
                     });
         }
 
