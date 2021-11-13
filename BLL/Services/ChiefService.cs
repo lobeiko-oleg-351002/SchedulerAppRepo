@@ -22,8 +22,15 @@ namespace BLL.Services
         public List<ChiefViewModel> GetByProfile(string tag)
         {
             var result = new List<ChiefViewModel>();
-            ((IChiefRepository)Repository).GetByProfile(tag).ForEach(item => result.Add(Converter.ConvertToViewModel(item)));
-            return result;
+            try
+            {
+                ((IChiefRepository)Repository).GetByProfile(tag).ForEach(item => result.Add(Converter.ConvertToViewModel(item)));
+                return result;
+            }
+            catch
+            {
+                throw;
+            }
         }
     }
 }

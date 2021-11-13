@@ -25,29 +25,64 @@ namespace BLL.Services
 
         public virtual void Create(UEntity entity)
         {
-            Repository.Create(Converter.ConvertToEntity(entity));
+            try
+            { 
+              Repository.Create(Converter.ConvertToEntity(entity));
+            }
+            catch
+            {
+                throw;
+            }
         }
 
         public virtual void Delete(Guid id)
         {
-            Repository.Delete(id);
+            try
+            { 
+               Repository.Delete(id);
+            }
+            catch
+            {
+                throw;
+            }
         }
 
         public virtual List<UEntity> GetAll()
         {
             var result = new List<UEntity>();
-            Repository.GetAll().ForEach(item => result.Add(Converter.ConvertToViewModel(item)));
-            return result;
+            try
+            {
+                Repository.GetAll().ForEach(item => result.Add(Converter.ConvertToViewModel(item)));
+                return result;
+            }
+            catch
+            {
+                throw;
+            }
         }
 
         public virtual UEntity Get(Guid id)
         {
-            return Converter.ConvertToViewModel(Repository.Get(id));
+            try
+            {
+                return Converter.ConvertToViewModel(Repository.Get(id));
+            }
+            catch
+            {
+                throw;
+            }
         }
 
         public virtual void Update(UEntity entity)
         {
-            Repository.Update(Converter.ConvertToEntity(entity));
+            try
+            {
+                Repository.Update(Converter.ConvertToEntity(entity));
+            }
+            catch
+            {
+                throw;
+            }
         }
     }
 }

@@ -1,7 +1,9 @@
 ﻿using BLL.Services.Interface;
+using DAL.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using SchedulerApp.AuthorizationTokens;
+using SchedulerApp.Controllers.Validation;
 using SchedulerViewModels;
 using System;
 using System.Collections.Generic;
@@ -26,10 +28,23 @@ namespace SchedulerApp.Controllers
         [HttpPost]
         public IActionResult Authentificate(string username, string password)
         {
-            StudentViewModel student = StudentService.GetByNameAndPassword(username, password);
-            if (student == null)
+            UserValidation.ValidateNameAndPassword(username, password, ModelState);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            StudentViewModel student;
+            try
+            {
+                student = StudentService.GetByNameAndPassword(username, password);
+            }
+            catch(ItemNotFoundException ex)
             {
                 return BadRequest(new { errorText = "Invalid username or password." });
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(new { ex.Message });
             }
 
             var tokenHandler = new JwtSecurityTokenHandler();

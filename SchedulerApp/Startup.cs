@@ -23,6 +23,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using SchedulerApp.AuthorizationTokens;
 using SchedulerApp.Middleware;
+using BLL.ValidationServices.Interface;
+using BLL.ValidationServices;
 
 namespace SchedulerApp
 {
@@ -46,6 +48,7 @@ namespace SchedulerApp
             services.AddRazorPages();
 
             services.AddControllers();
+            services.AddScoped<IUserValidationService, UserValidationService>();
             services.AddScoped<IStudentRepository, StudentRepository>();
             services.AddScoped<IStudentConverter, StudentConverter>();
             services.AddScoped<IStudentService, StudentService>();
@@ -101,8 +104,10 @@ namespace SchedulerApp
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseMiddleware<ExceptionMiddleware>();
+
             app.UseHttpsRedirection();
-            app.UseStaticFiles();
+           // app.UseStaticFiles();
 
             app.UseSwagger();
             app.UseSwaggerUI(c =>

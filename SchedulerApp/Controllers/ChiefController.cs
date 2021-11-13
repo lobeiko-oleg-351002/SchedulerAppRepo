@@ -25,16 +25,30 @@ namespace SchedulerApp.Controllers
         [HttpPost]
         public IActionResult CreateUser(ChiefViewModel userModel)
         {
-            ChiefService.Create(userModel);
-            return Ok(userModel);
+            try
+            {
+                ChiefService.Create(userModel);
+                return Ok(userModel);
+            }
+            catch
+            {
+                throw;
+            }
         }
 
         [HttpGet]
         [Route("{id}")]
         public IActionResult Get(Guid id)
         {
-            var result = ChiefService.Get(id);
-            return Ok(result);
+            try
+            {
+                var result = ChiefService.Get(id);
+                return Ok(result);
+            }
+            catch
+            {
+                throw;
+            }
         }
     }
 }

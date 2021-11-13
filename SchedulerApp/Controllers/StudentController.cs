@@ -2,10 +2,12 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using SchedulerApp.Controllers.Validation;
 using SchedulerViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mail;
 using System.Threading.Tasks;
 
 namespace SchedulerApp.Controllers
@@ -26,23 +28,62 @@ namespace SchedulerApp.Controllers
         [HttpPost]
         public IActionResult CreateUser(StudentViewModel studentModel)
         {
-            StudentService.Create(studentModel);
-            return Ok(studentModel);
+            try
+            {
+                UserValidation.ValidateUser(studentModel, ModelState);
+                if (ModelState.IsValid)
+                {
+                    StudentService.Create(studentModel);
+                    return Ok(studentModel);
+                }
+                else
+                {
+                    return BadRequest(ModelState);
+                }
+            }
+            catch
+            {
+                throw;
+            }
         }
 
         [Authorize(Roles = "Admin")]
         [HttpGet]
         public IActionResult GetAll()
         {
-            var result = StudentService.GetAll();
-            return Ok(result);
+            try
+            {
+                var result = StudentService.GetAll();
+                return Ok(result);
+            }
+            catch
+            {
+                throw;
+            }
         }
 
         [HttpPut]
         public IActionResult UpdateUser(StudentViewModel studentModel)
         {
-            StudentService.Update(studentModel);
-            return new OkResult();
+            try
+            {
+                UserValidation.ValidateUser(studentModel, ModelState);
+                if (ModelState.IsValid)
+                {
+                    StudentService.Update(studentModel);
+                    return Ok(studentModel);
+                }
+                else
+                {
+                    return BadRequest(ModelState);
+                }
+            }
+            catch
+            {
+                throw;
+            }
         }
+
+
     }
 }
