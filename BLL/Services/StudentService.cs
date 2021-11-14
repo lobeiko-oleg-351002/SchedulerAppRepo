@@ -3,6 +3,7 @@ using BLL.Converters.Interface;
 using BLL.Services.Interface;
 using BLL.ValidationServices.Interface;
 using DAL.Repositories.Interface;
+using Microsoft.Extensions.Logging;
 using SchedulerModels;
 using SchedulerViewModels;
 using System;
@@ -16,9 +17,12 @@ namespace BLL.Services
     public class StudentService : Service<Student, StudentViewModel>, IStudentService
     {
         private readonly IUserValidationService UserValidationService;
-        public StudentService(IStudentRepository studentRepository, IStudentConverter studentConverter, IUserValidationService userValidationService) : base(studentRepository, studentConverter)
+        private readonly ILogger<StudentService> Logger;
+        public StudentService(IStudentRepository studentRepository, IStudentConverter studentConverter, IUserValidationService userValidationService, ILogger<StudentService> logger) 
+            : base(studentRepository, studentConverter)
         {
             UserValidationService = userValidationService;
+            Logger = logger;
         }
 
         public StudentViewModel GetByNameAndPassword(string name, string password)
@@ -29,6 +33,7 @@ namespace BLL.Services
             }
             catch
             {
+                Logger.LogError("GetByNameAndPassword: error.");
                 throw;
             }
         }
@@ -42,6 +47,7 @@ namespace BLL.Services
             }
             catch
             {
+                Logger.LogError("Create: error.");
                 throw;
             }
         }
@@ -55,6 +61,7 @@ namespace BLL.Services
             }
             catch
             {
+                Logger.LogError("Update: error.");
                 throw;
             }
         }

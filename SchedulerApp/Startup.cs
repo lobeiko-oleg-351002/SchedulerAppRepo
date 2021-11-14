@@ -25,6 +25,7 @@ using SchedulerApp.AuthorizationTokens;
 using SchedulerApp.Middleware;
 using BLL.ValidationServices.Interface;
 using BLL.ValidationServices;
+using Serilog;
 
 namespace SchedulerApp
 {
@@ -105,6 +106,7 @@ namespace SchedulerApp
             }
 
             app.UseMiddleware<ExceptionMiddleware>();
+            app.UseSerilogRequestLogging();
 
             app.UseHttpsRedirection();
            // app.UseStaticFiles();

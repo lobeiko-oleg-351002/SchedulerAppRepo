@@ -30,19 +30,24 @@ namespace SchedulerApp.Controllers
         {
             try
             {
+                Logger.LogInformation("CreateUser: validation...");
                 UserValidation.ValidateUser(studentModel, ModelState);
                 if (ModelState.IsValid)
                 {
+                    Logger.LogInformation("CreateUser: create model...");
                     StudentService.Create(studentModel);
+                    Logger.LogInformation("CreateUser: success.");
                     return Ok(studentModel);
                 }
                 else
                 {
+                    Logger.LogError("CreateUser: user is not valid.");
                     return BadRequest(ModelState);
                 }
             }
             catch
             {
+                Logger.LogError("CreateUser: error.");
                 throw;
             }
         }
