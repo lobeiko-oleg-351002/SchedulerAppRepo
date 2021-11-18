@@ -17,10 +17,8 @@ namespace SchedulerViewModels
 
         public ChiefViewModel(StudentViewModel baseObject)
         {
-            this.Id = base.Id;
-            this.Email = baseObject.Email;
+            this.Id = baseObject.Id;
             this.Name = baseObject.Name;
-            this.Password = baseObject.Password;
         }
     }
 }

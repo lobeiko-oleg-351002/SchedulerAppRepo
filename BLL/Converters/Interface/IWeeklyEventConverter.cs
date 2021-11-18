@@ -1,5 +1,6 @@
 ﻿using SchedulerModels;
 using SchedulerViewModels;
+using SchedulerViewModels.CreateModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace BLL.Converters.Interface
 {
-    public interface IWeeklyEventConverter : IEventConverter<WeeklyEvent, WeeklyEventViewModel>
+    public interface IWeeklyEventConverter : IEventConverter<WeeklyEventCreateModel, WeeklyEventViewModel, WeeklyEvent>
     {
 
     }

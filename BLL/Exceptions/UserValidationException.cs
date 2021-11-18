@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BLL.Exceptions
 {
-    public class UserValidationException : Exception
+    public class UserValidationException : BllException
     {
         public UserValidationException(string message) : base(message)
         {

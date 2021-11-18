@@ -3,6 +3,7 @@ using BLL.Services.Interface;
 using DAL.Repositories.Interface;
 using SchedulerModels;
 using SchedulerViewModels;
+using SchedulerViewModels.CreateModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,24 +12,26 @@ using System.Threading.Tasks;
 
 namespace BLL.Services
 {
-    public class EventService<TEvent, UEvent> : Service<TEvent, UEvent>, IEventService<UEvent>
+    public class EventService<TEvent, UEvent, YEvent> : Service<TEvent, UEvent, YEvent>, IEventService<UEvent, YEvent>
         where TEvent : Event
         where UEvent : EventViewModel
+        where YEvent : EventCreateModel
     {
-        private readonly ISubscriberService SubscriberService;
-        public EventService(IEventRepository<TEvent> repository, ISubscriberService subscriberService, IEventConverter<TEvent, UEvent> eventConverter) : base(repository, eventConverter)
+        private readonly ISubscriberService _subscriberService;
+        public EventService(IEventRepository<TEvent> repository, ISubscriberService subscriberService, IEventConverter<YEvent, UEvent, TEvent> eventConverter) : base(repository, eventConverter)
         {
-            SubscriberService = subscriberService ?? throw new ArgumentNullException(nameof(SubscriberService));
+            _subscriberService = subscriberService ?? throw new ArgumentNullException(nameof(_subscriberService));
         }
 
-        public void AddSubscriberToEvent(Student student, UEvent evnt)
+        public void AddSubscriberToEvent(Student student, YEvent evnt)
         {
             var subscriber = CreateSubscriber(student, evnt);
-            evnt.Subscribers.Add(subscriber);
-            Repository.Update(Converter.ConvertToEntity(evnt));
+            //evnt.Subscribers.Add(subscriber);
+            //_repository.Update(_converter.ConvertToEntity(evnt));
+            throw new NotImplementedException();
         }
 
-        protected SubscriberViewModel CreateSubscriber(Student student, UEvent evnt)
+        protected SubscriberViewModel CreateSubscriber(Student student, YEvent evnt)
         {
             //Subscriber subscriber = new Subscriber();
             //subscriber.Event = evnt;

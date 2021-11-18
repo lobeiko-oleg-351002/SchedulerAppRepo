@@ -3,6 +3,7 @@ using BLL.Services.Interface;
 using DAL.Repositories.Interface;
 using SchedulerModels;
 using SchedulerViewModels;
+using SchedulerViewModels.CreateModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,13 +12,13 @@ using System.Threading.Tasks;
 
 namespace BLL.Services
 {
-    public class WeeklyEventService : EventService<WeeklyEvent, WeeklyEventViewModel>, IWeeklyEventService
+    public class WeeklyEventService : EventService<WeeklyEvent, WeeklyEventViewModel, WeeklyEventCreateModel>, IWeeklyEventService
     {
-        private readonly IWeeklyEventTimeService WeeklyEventTimeService;
+        private readonly IWeeklyEventTimeService _weeklyEventTimeService;
         public WeeklyEventService(IWeeklyEventRepository weeklyEventRepository, ISubscriberService subscriberService, IWeeklyEventTimeService weeklyEventTimeService, IWeeklyEventConverter weeklyEventConverter) 
             : base(weeklyEventRepository, subscriberService, weeklyEventConverter)
         {
-            WeeklyEventTimeService = weeklyEventTimeService ?? throw new ArgumentNullException(nameof(WeeklyEventTimeService));
+            _weeklyEventTimeService = weeklyEventTimeService ?? throw new ArgumentNullException(nameof(_weeklyEventTimeService));
         }
 
     }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using BLL.Exceptions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using SchedulerViewModels;
 using System;
@@ -26,9 +27,13 @@ namespace SchedulerApp.Middleware
             {
                 await _next(context);
             }
-            catch (Exception ex)
+            catch(UserValidationException ex)
             {
                 await HandleExceptionAsync(context, ex, HttpStatusCode.BadRequest);
+            }
+            catch (Exception ex)
+            {
+                await HandleExceptionAsync(context, ex, HttpStatusCode.InternalServerError);
             }
         }
 

@@ -10,5 +10,7 @@ namespace BLL.ValidationServices.Interface
     public interface IUserValidationService
     {
         void ValidateNewUser(Student user);
+
+        void ValidateNameAndPassword(string name, string password);
     }
 }

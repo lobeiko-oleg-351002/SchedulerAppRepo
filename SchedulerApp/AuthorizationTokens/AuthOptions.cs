@@ -2,6 +2,7 @@
 using SchedulerViewModels;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
@@ -51,9 +52,27 @@ namespace SchedulerApp.AuthorizationTokens
             {
                 new Claim(ClaimTypes.Name, user),
                 new Claim(ClaimTypes.NameIdentifier, student.Id.ToString()),
-                new Claim(ClaimTypes.Email, student.Email),
                 new Claim(ClaimTypes.Role, student.Role.Name),
             }, "tokenAuthorization");
+        }
+
+        public static UserToken CreateUserToken(StudentViewModel student)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = AuthOptions.CreateClaimsIdentity(student),
+                SigningCredentials = new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256Signature)
+            };
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+
+            var response = new UserToken
+            {
+                Token = tokenHandler.WriteToken(token),
+                UserName = student.Name
+            };
+
+            return response;
         }
     }
 }

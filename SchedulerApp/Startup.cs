@@ -26,6 +26,8 @@ using SchedulerApp.Middleware;
 using BLL.ValidationServices.Interface;
 using BLL.ValidationServices;
 using Serilog;
+using DAL.Repositories.Logging;
+using SchedulerModels;
 
 namespace SchedulerApp
 {
@@ -49,11 +51,13 @@ namespace SchedulerApp
             services.AddRazorPages();
 
             services.AddControllers();
+            services.AddScoped<ILogMessageManager<Student>, LogMessageManager<Student>>();
             services.AddScoped<IUserValidationService, UserValidationService>();
             services.AddScoped<IStudentRepository, StudentRepository>();
             services.AddScoped<IStudentConverter, StudentConverter>();
             services.AddScoped<IStudentService, StudentService>();
 
+            services.AddScoped<ILogMessageManager<Chief>, LogMessageManager<Chief>>();
             services.AddScoped<IChiefRepository, ChiefRepository>();
             services.AddScoped<IChiefConverter, ChiefConverter>();
             services.AddScoped<IChiefService, ChiefService>();

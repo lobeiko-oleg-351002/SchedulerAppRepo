@@ -1,6 +1,7 @@
 ﻿using BLL.Converters.Interface;
 using SchedulerModels;
 using SchedulerViewModels;
+using SchedulerViewModels.CreateModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,37 +10,37 @@ using System.Threading.Tasks;
 
 namespace BLL.Converters
 {
-    public class EventConverter<TEvent, UEvent> : IEventConverter<TEvent, UEvent>
-        where TEvent : Event, new()
+    public class EventConverter<TEvent, UEvent, YEvent> : IEventConverter<TEvent, UEvent, YEvent>
+        where TEvent : EventCreateModel, new()
         where UEvent : EventViewModel, new()
+        where YEvent : Event, new()
     {
-        private readonly ISubscriberConverter SubscriberConverter;
-        private readonly IEventTemplateConverter EventTemplateConverter;
-        private readonly IChiefConverter ChiefConverter;
+        private readonly ISubscriberConverter _subscriberConverter;
+        private readonly IEventTemplateConverter _eventTemplateConverter;
+        private readonly IChiefConverter _chiefConverter;
         public EventConverter(ISubscriberConverter subscriberConverter, IEventTemplateConverter eventTemplateConverter, IChiefConverter chiefConverter)
         {
-            SubscriberConverter = subscriberConverter ?? throw new ArgumentNullException(nameof(subscriberConverter));
-            EventTemplateConverter = eventTemplateConverter ?? throw new ArgumentNullException(nameof(eventTemplateConverter));
-            ChiefConverter = chiefConverter ?? throw new ArgumentNullException(nameof(chiefConverter));
+            _subscriberConverter = subscriberConverter ?? throw new ArgumentNullException(nameof(subscriberConverter));
+            _eventTemplateConverter = eventTemplateConverter ?? throw new ArgumentNullException(nameof(eventTemplateConverter));
+            _chiefConverter = chiefConverter ?? throw new ArgumentNullException(nameof(chiefConverter));
         }
-        public virtual TEvent ConvertToEntity(UEvent model)
+        public virtual YEvent ConvertToEntity(TEvent model)
         {
-            TEvent result = new();
+            YEvent result = new();
             result.Id = model.Id;
-            model.Subscribers.ForEach(item => result.Subscribers.Add(SubscriberConverter.ConvertToEntity(item)));
-            result.EventTemplate = EventTemplateConverter.ConvertToEntity(model.EventTemplateViewModel);
-            result.Chief = ChiefConverter.ConvertToEntity(model.ChiefViewModel);
+           // result.EventTemplate = _eventTemplateConverter.ConvertToEntity(model.EventTemplateViewModel);
+           // result.Chief = _chiefConverter.ConvertToEntity(model.ChiefViewModel);
 
             return result;
         }
 
-        public virtual UEvent ConvertToViewModel(TEvent entity)
+        public virtual UEvent ConvertToViewModel(YEvent entity)
         {
             UEvent result = new();
             result.Id = entity.Id;
-            entity.Subscribers.ForEach(item => result.Subscribers.Add(SubscriberConverter.ConvertToViewModel(item)));
-            result.EventTemplateViewModel = EventTemplateConverter.ConvertToViewModel(entity.EventTemplate);
-            result.ChiefViewModel = ChiefConverter.ConvertToViewModel(entity.Chief);
+            entity.Subscribers.ForEach(item => result.Subscribers.Add(_subscriberConverter.ConvertToViewModel(item)));
+            result.EventTemplateViewModel = _eventTemplateConverter.ConvertToViewModel(entity.EventTemplate);
+            result.ChiefViewModel = _chiefConverter.ConvertToViewModel(entity.Chief);
 
             return result;
         }

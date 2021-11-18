@@ -3,6 +3,7 @@ using BLL.Services.Interface;
 using DAL.Repositories.Interface;
 using SchedulerModels;
 using SchedulerViewModels;
+using SchedulerViewModels.CreateModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,78 +12,46 @@ using System.Threading.Tasks;
 
 namespace BLL.Services
 {
-    public class Service<TEntity, UEntity> : IService<UEntity>
+    public class Service<TEntity, UEntity, YEntity> : IService<UEntity, YEntity>
          where TEntity : Entity
          where UEntity : ViewModel
+         where YEntity : CreateModel
     {
-        protected readonly IRepository<TEntity> Repository;
-        protected readonly IConverter<TEntity, UEntity> Converter;
-        public Service(IRepository<TEntity> repository, IConverter<TEntity, UEntity> converter)
+        protected readonly IRepository<TEntity> _repository;
+        protected readonly IConverter<YEntity, UEntity, TEntity> _converter;
+        public Service(IRepository<TEntity> repository, IConverter<YEntity, UEntity, TEntity> converter)
         {
-            Repository = repository;
-            Converter = converter;
+            _repository = repository;
+            _converter = converter;
         }
 
-        public virtual void Create(UEntity entity)
-        {
-            try
-            { 
-              Repository.Create(Converter.ConvertToEntity(entity));
-            }
-            catch
-            {
-                throw;
-            }
+        public virtual UEntity Create(YEntity entity)
+        { 
+            TEntity result = _repository.Create(_converter.ConvertToEntity(entity));
+            return _converter.ConvertToViewModel(result);
         }
 
         public virtual void Delete(Guid id)
-        {
-            try
-            { 
-               Repository.Delete(id);
-            }
-            catch
-            {
-                throw;
-            }
+        { 
+            _repository.Delete(id);
         }
 
         public virtual List<UEntity> GetAll()
         {
             var result = new List<UEntity>();
-            try
-            {
-                Repository.GetAll().ForEach(item => result.Add(Converter.ConvertToViewModel(item)));
-                return result;
-            }
-            catch
-            {
-                throw;
-            }
+            _repository.GetAll().ForEach(item => result.Add(_converter.ConvertToViewModel(item)));
+            return result;
         }
 
         public virtual UEntity Get(Guid id)
         {
-            try
-            {
-                return Converter.ConvertToViewModel(Repository.Get(id));
-            }
-            catch
-            {
-                throw;
-            }
+            return _converter.ConvertToViewModel(_repository.Get(id));
         }
 
-        public virtual void Update(UEntity entity)
+        public virtual UEntity Update(YEntity entity)
         {
-            try
-            {
-                Repository.Update(Converter.ConvertToEntity(entity));
-            }
-            catch
-            {
-                throw;
-            }
+            TEntity result = _repository.Update(_converter.ConvertToEntity(entity));
+            return _converter.ConvertToViewModel(result);
         }
     }
 }

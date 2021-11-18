@@ -1,6 +1,7 @@
 ﻿using BLL.Converters.Interface;
 using SchedulerModels;
 using SchedulerViewModels;
+using SchedulerViewModels.CreateModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,18 +12,17 @@ namespace BLL.Converters
 {
     public class WeeklyEventTimeConverter : IWeeklyEventTimeConverter
     {
-        private readonly IDayOfWeekConverter DayOfWeekConverter;
-        public WeeklyEventTimeConverter(IDayOfWeekConverter dayOfWeekConverter)
+        public WeeklyEventTimeConverter()
         {
-            dayOfWeekConverter = DayOfWeekConverter ?? throw new ArgumentNullException(nameof(DayOfWeekConverter));
+
         }
-        public WeeklyEventTime ConvertToEntity(WeeklyEventTimeViewModel model)
+        public WeeklyEventTime ConvertToEntity(WeeklyEventTimeCreateModel model)
         {
             WeeklyEventTime result = new WeeklyEventTime();
 
             result.Id = model.Id;
             result.Time = model.Time;
-            model.DaysOfWeek.ForEach(item => result.DaysOfWeek.Add(DayOfWeekConverter.ConvertToEntity(item)));
+            model.DaysOfWeek.ForEach(item => result.DaysOfWeek.Add(item));
   
             return result;
         }
@@ -33,7 +33,7 @@ namespace BLL.Converters
 
             result.Id = entity.Id;
             result.Time = entity.Time;
-            entity.DaysOfWeek.ForEach(item => result.DaysOfWeek.Add(DayOfWeekConverter.ConvertToViewModel(item)));
+            entity.DaysOfWeek.ForEach(item => result.DaysOfWeek.Add(item));
 
             return result;
         }

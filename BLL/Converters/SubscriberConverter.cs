@@ -1,6 +1,7 @@
 ﻿using BLL.Converters.Interface;
 using SchedulerModels;
 using SchedulerViewModels;
+using SchedulerViewModels.CreateModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,18 +12,17 @@ namespace BLL.Converters
 {
     public class SubscriberConverter : ISubscriberConverter
     {
-        private readonly IStudentConverter StudentConverter;
+        private readonly IStudentConverter _studentConverter;
         public SubscriberConverter(IStudentConverter studentConverter)
         {
-            StudentConverter = studentConverter ?? throw new ArgumentNullException(nameof(studentConverter));
+            _studentConverter = studentConverter ?? throw new ArgumentNullException(nameof(studentConverter));
         }
-        public Subscriber ConvertToEntity(SubscriberViewModel model)
+        public Subscriber ConvertToEntity(SubscriberCreateModel model)
         {
             Subscriber result = new Subscriber
             {
                 Id = model.Id,
-                IsConfirmed = model.IsConfirmed,
-                Student = StudentConverter.ConvertToEntity(model.StudentViewModel),
+               // Student = _studentConverter.ConvertToEntity(model.StudentViewModel),
             };
             return result;
         }
@@ -33,7 +33,7 @@ namespace BLL.Converters
             {
                 Id = entity.Id,
                 IsConfirmed = entity.IsConfirmed,
-                StudentViewModel = StudentConverter.ConvertToViewModel(entity.Student),
+                StudentViewModel = _studentConverter.ConvertToViewModel(entity.Student),
             };
             return result;
         }

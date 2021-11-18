@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DAL.Exceptions
 {
-    public class ItemNotFoundException : Exception
+    public class ItemNotFoundException : DalException
     {
         public ItemNotFoundException() : base("Item not found")
         {

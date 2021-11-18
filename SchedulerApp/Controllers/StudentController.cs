@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using SchedulerApp.Controllers.Validation;
 using SchedulerViewModels;
+using SchedulerViewModels.CreateModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,40 +16,18 @@ namespace SchedulerApp.Controllers
     [Route("[controller]/[action]")]
     public class StudentController : ControllerBase
     {
-        private readonly IStudentService StudentService;
-        private readonly ILogger<StudentController> Logger;
+        private readonly IStudentService _studentService;
 
-        public StudentController(IStudentService studentService, ILogger<StudentController> logger)
+        public StudentController(IStudentService studentService)
         {
-            StudentService = studentService;
-            Logger = logger;
+            _studentService = studentService;
         }
 
         [HttpPost]
-        public IActionResult CreateUser(StudentViewModel studentModel)
+        public IActionResult CreateUser(StudentCreateModel studentModel)
         {
-            try
-            {
-                Logger.LogInformation("CreateUser: validation...");
-                UserValidation.ValidateUser(studentModel, ModelState);
-                if (ModelState.IsValid)
-                {
-                    Logger.LogInformation("CreateUser: create model...");
-                    StudentService.Create(studentModel);
-                    Logger.LogInformation("CreateUser: success.");
-                    return Ok(studentModel);
-                }
-                else
-                {
-                    Logger.LogError("CreateUser: user is not valid.");
-                    return BadRequest(ModelState);
-                }
-            }
-            catch
-            {
-                Logger.LogError("CreateUser: error.");
-                throw;
-            }
+            _studentService.Create(studentModel);
+            return Ok(studentModel);
         }
 
         [Authorize(Roles = "Admin")]
@@ -58,7 +36,7 @@ namespace SchedulerApp.Controllers
         {
             try
             {
-                var result = StudentService.GetAll();
+                var result = _studentService.GetAll();
                 return Ok(result);
             }
             catch
@@ -68,27 +46,10 @@ namespace SchedulerApp.Controllers
         }
 
         [HttpPut]
-        public IActionResult UpdateUser(StudentViewModel studentModel)
+        public IActionResult UpdateUser(StudentCreateModel studentModel)
         {
-            try
-            {
-                UserValidation.ValidateUser(studentModel, ModelState);
-                if (ModelState.IsValid)
-                {
-                    StudentService.Update(studentModel);
-                    return Ok(studentModel);
-                }
-                else
-                {
-                    return BadRequest(ModelState);
-                }
-            }
-            catch
-            {
-                throw;
-            }
+            _studentService.Update(studentModel);
+            return Ok(studentModel);
         }
-
-
     }
 }

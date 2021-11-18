@@ -1,11 +1,14 @@
 ﻿using BLL.Converters;
 using BLL.Converters.Interface;
+using BLL.Exceptions;
 using BLL.Services.Interface;
 using BLL.ValidationServices.Interface;
+using DAL.Exceptions;
 using DAL.Repositories.Interface;
 using Microsoft.Extensions.Logging;
 using SchedulerModels;
 using SchedulerViewModels;
+using SchedulerViewModels.CreateModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,56 +17,38 @@ using System.Threading.Tasks;
 
 namespace BLL.Services
 {
-    public class StudentService : Service<Student, StudentViewModel>, IStudentService
+    public class StudentService : Service<Student, StudentViewModel, StudentCreateModel>, IStudentService
     {
-        private readonly IUserValidationService UserValidationService;
-        private readonly ILogger<StudentService> Logger;
-        public StudentService(IStudentRepository studentRepository, IStudentConverter studentConverter, IUserValidationService userValidationService, ILogger<StudentService> logger) 
+        private readonly IUserValidationService _userValidationService;
+        public StudentService(IStudentRepository studentRepository, IStudentConverter studentConverter, IUserValidationService userValidationService) 
             : base(studentRepository, studentConverter)
         {
-            UserValidationService = userValidationService;
-            Logger = logger;
+            _userValidationService = userValidationService;
         }
 
         public StudentViewModel GetByNameAndPassword(string name, string password)
         {
+            _userValidationService.ValidateNameAndPassword(name, password);
             try
             {
-                return Converter.ConvertToViewModel(((IStudentRepository)Repository).GetByNameAndPassword(name, password));
+                return _converter.ConvertToViewModel(((IStudentRepository)_repository).GetByNameAndPassword(name, password));
             }
-            catch
+            catch (ItemNotFoundException)
             {
-                Logger.LogError("GetByNameAndPassword: error.");
-                throw;
+                throw new UserNotFoundException();
             }
         }
 
-        public override void Create(StudentViewModel entity)
+        public override StudentViewModel Create(StudentCreateModel entity)
         {
-            try
-            {
-                UserValidationService.ValidateNewUser(Converter.ConvertToEntity(entity));
-                base.Create(entity);
-            }
-            catch
-            {
-                Logger.LogError("Create: error.");
-                throw;
-            }
+            _userValidationService.ValidateNewUser(_converter.ConvertToEntity(entity));
+            return base.Create(entity);
         }
 
-        public override void Update(StudentViewModel entity)
+        public override StudentViewModel Update(StudentCreateModel entity)
         {
-            try
-            {
-                UserValidationService.ValidateNewUser(Converter.ConvertToEntity(entity));
-                base.Update(entity);
-            }
-            catch
-            {
-                Logger.LogError("Update: error.");
-                throw;
-            }
+            _userValidationService.ValidateNewUser(_converter.ConvertToEntity(entity));
+           return  base.Update(entity);
         }
     }
 }

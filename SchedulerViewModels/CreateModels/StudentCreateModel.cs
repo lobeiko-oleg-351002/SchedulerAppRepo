@@ -1,9 +1,13 @@
 ﻿using SchedulerModels;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace SchedulerViewModels
+namespace SchedulerViewModels.CreateModels
 {
-    public class StudentViewModel : ViewModel
+    public class StudentCreateModel : CreateModel
     {
         public string Name { get; set; }
 

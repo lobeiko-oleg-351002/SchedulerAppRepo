@@ -10,6 +10,6 @@ namespace SchedulerViewModels
     {
         public DateTime Time { get; set; }
 
-        public List<DayOfWeekViewModel> DaysOfWeek { get; set; }
+        public List<SchedulerModels.DayOfWeek> DaysOfWeek { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using SchedulerModels;
 using SchedulerViewModels;
+using SchedulerViewModels.CreateModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,10 +9,11 @@ using System.Threading.Tasks;
 
 namespace BLL.Services.Interface
 {
-    public interface IService<TEntity>
+    public interface IService<TEntity, UEntity>
         where TEntity : ViewModel
+        where UEntity : CreateModel
     {
-        void Create(TEntity entity);
+        TEntity Create(UEntity entity);
 
         List<TEntity> GetAll();
 
@@ -19,6 +21,6 @@ namespace BLL.Services.Interface
 
         void Delete(Guid id);
 
-        void Update(TEntity entity);
+        TEntity Update(UEntity entity);
     }
 }
