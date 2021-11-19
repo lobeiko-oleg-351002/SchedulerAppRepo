@@ -9,6 +9,6 @@ namespace DAL.Repositories.Interface
 {
     public interface IChiefRepository : IRepository<Chief>
     {
-        List<Chief> GetByProfileDescription(string tag);
+        Task<List<Chief>> GetByProfileDescription(string tag);
     }
 }

@@ -26,9 +26,9 @@ namespace SchedulerApp.Controllers
         }
 
         [HttpPost]
-        public IActionResult Authentificate(string username, string password)
+        public async Task<IActionResult> Authentificate(string username, string password)
         {
-            StudentViewModel student = _studentService.GetByNameAndPassword(username, password);
+            StudentViewModel student = await _studentService.GetByNameAndPassword(username, password);
             var userToken = AuthOptions.CreateUserToken(student);
             return Ok(userToken);
         }

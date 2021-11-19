@@ -22,17 +22,17 @@ namespace SchedulerApp.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateUser(ChiefCreateModel userModel)
+        public async Task<IActionResult> CreateUser(ChiefCreateModel userModel)
         {
-            _chiefService.Create(userModel);
-            return Ok(userModel);
+            var viewModel = await _chiefService.Create(userModel);
+            return Ok(viewModel);
         }
 
         [HttpGet]
         [Route("{id}")]
-        public IActionResult Get(Guid id)
+        public async Task<IActionResult> Get(Guid id)
         {
-            var result = _chiefService.Get(id);
+            var result = await _chiefService.Get(id);
             return Ok(result);
         }
     }

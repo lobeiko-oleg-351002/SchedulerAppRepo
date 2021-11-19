@@ -13,14 +13,14 @@ namespace BLL.Services.Interface
         where TEntity : ViewModel
         where UEntity : CreateModel
     {
-        TEntity Create(UEntity entity);
+        Task<TEntity> Create(UEntity entity);
 
-        List<TEntity> GetAll();
+        Task<List<TEntity>> GetAll();
 
-        TEntity Get(Guid id);
+        Task<TEntity> Get(Guid id);
 
         void Delete(Guid id);
 
-        TEntity Update(UEntity entity);
+        Task<TEntity> Update(UEntity entity);
     }
 }

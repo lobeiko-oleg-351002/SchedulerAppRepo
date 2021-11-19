@@ -25,9 +25,9 @@ namespace BLL.Services
             _converter = converter;
         }
 
-        public virtual UEntity Create(YEntity entity)
+        public virtual async Task<UEntity> Create(YEntity entity)
         { 
-            TEntity result = _repository.Create(_converter.ConvertToEntity(entity));
+            TEntity result = await _repository.Create(_converter.ConvertToEntity(entity));
             return _converter.ConvertToViewModel(result);
         }
 
@@ -36,21 +36,21 @@ namespace BLL.Services
             _repository.Delete(id);
         }
 
-        public virtual List<UEntity> GetAll()
+        public virtual async Task<List<UEntity>> GetAll()
         {
-            var result = new List<UEntity>();
-            _repository.GetAll().ForEach(item => result.Add(_converter.ConvertToViewModel(item)));
-            return result;
+            var entities = await _repository.GetAll();
+            return entities.Select(_converter.ConvertToViewModel).ToList();
         }
 
-        public virtual UEntity Get(Guid id)
+        public virtual async Task<UEntity> Get(Guid id)
         {
-            return _converter.ConvertToViewModel(_repository.Get(id));
+            var entity = await _repository.Get(id);
+            return _converter.ConvertToViewModel(entity);
         }
 
-        public virtual UEntity Update(YEntity entity)
+        public virtual async Task<UEntity> Update(YEntity entity)
         {
-            TEntity result = _repository.Update(_converter.ConvertToEntity(entity));
+            TEntity result = await _repository.Update(_converter.ConvertToEntity(entity));
             return _converter.ConvertToViewModel(result);
         }
     }

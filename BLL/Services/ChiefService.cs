@@ -20,11 +20,10 @@ namespace BLL.Services
             
         }
 
-        public List<ChiefViewModel> GetByProfileDescription(string tag)
-        {
-            var result = new List<ChiefViewModel>();
-            ((IChiefRepository)_repository).GetByProfileDescription(tag).Select(_converter.ConvertToViewModel).ToList();
-            return result;
+        public async Task<List<ChiefViewModel>> GetByProfileDescription(string tag)
+        { 
+            var entities = await ((IChiefRepository)_repository).GetByProfileDescription(tag);
+            return entities.Select(_converter.ConvertToViewModel).ToList();
         }
     }
 }

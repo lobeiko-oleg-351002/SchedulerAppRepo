@@ -11,14 +11,14 @@ namespace DAL.Repositories.Interface
         where TEntity : Entity
 
     {
-        TEntity Create(TEntity entity);
+        Task<TEntity> Create(TEntity entity);
 
-        List<TEntity> GetAll();
+        Task<List<TEntity>> GetAll();
 
-        TEntity Get(Guid id);
+        Task<TEntity> Get(Guid id);
 
         void Delete(Guid id);
 
-        TEntity Update(TEntity entity);
+        Task<TEntity> Update(TEntity entity);
     }
 }

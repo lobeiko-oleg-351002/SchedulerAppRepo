@@ -24,19 +24,19 @@ namespace SchedulerApp.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateUser(StudentCreateModel studentModel)
+        public async Task<IActionResult> CreateUser(StudentCreateModel studentModel)
         {
-            _studentService.Create(studentModel);
-            return Ok(studentModel);
+            var viewModel = await _studentService.Create(studentModel);
+            return Ok(viewModel);
         }
 
         [Authorize(Roles = "Admin")]
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
             try
             {
-                var result = _studentService.GetAll();
+                var result = await _studentService.GetAll();
                 return Ok(result);
             }
             catch
@@ -46,10 +46,10 @@ namespace SchedulerApp.Controllers
         }
 
         [HttpPut]
-        public IActionResult UpdateUser(StudentCreateModel studentModel)
+        public async Task<IActionResult> UpdateUser(StudentCreateModel studentModel)
         {
-            _studentService.Update(studentModel);
-            return Ok(studentModel);
+            var viewModel = await _studentService.Update(studentModel);
+            return Ok(viewModel);
         }
     }
 }

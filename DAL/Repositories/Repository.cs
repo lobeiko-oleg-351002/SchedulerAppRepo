@@ -1,6 +1,7 @@
 ﻿using DAL.Exceptions;
 using DAL.Repositories.Interface;
 using DAL.Repositories.Logging;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using SchedulerMigrations.Data;
 using SchedulerModels;
@@ -25,15 +26,15 @@ namespace DAL.Repositories
             _logMessageManager = logMessageManager;
         }
 
-        public virtual TEntity Create(TEntity entity)
+        public virtual async Task<TEntity> Create(TEntity entity)
         {
             try
             {
                 _logMessageManager.LogEntityCreation(entity);
-                var result = _context.Set<TEntity>().Add(entity).Entity;
-                _context.SaveChanges();
+                var result = await _context.Set<TEntity>().AddAsync(entity);
+                await _context.SaveChangesAsync();
                 _logMessageManager.LogSuccess();
-                return result;
+                return result.Entity;
             }
             catch(Exception ex)
             {
@@ -42,14 +43,14 @@ namespace DAL.Repositories
             }
         }
 
-        public void Delete(Guid id)
+        public async void Delete(Guid id)
         {
             try
             {
                 _logMessageManager.LogDelete(id);
                 var entity = _context.Set<TEntity>().Single(e => e.Id == id);
                 _context.Set<TEntity>().Remove(entity);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
                 _logMessageManager.LogSuccess();
             }
             catch(Exception ex)
@@ -59,10 +60,10 @@ namespace DAL.Repositories
             }
         }
 
-        public virtual TEntity Get(Guid id)
+        public virtual async Task<TEntity> Get(Guid id)
         {
             _logMessageManager.LogGet(id);
-            var entity = _context.Set<TEntity>().FirstOrDefault(e => e.Id == id);
+            var entity = await _context.Set<TEntity>().FindAsync(id);
             if (entity != null)
             {
                 _logMessageManager.LogSuccess();
@@ -73,28 +74,28 @@ namespace DAL.Repositories
             throw ex;
         }
 
-        public virtual List<TEntity> GetAll()
+        public virtual async Task<List<TEntity>> GetAll()
         {
             _logMessageManager.LogGetAll();
-            var elements = _context.Set<TEntity>().Select(e => e);
+            var elements = _context.Set<TEntity>().AsQueryable();
             if (elements.Any())
             {
                 _logMessageManager.LogSuccess();
-                return elements.ToList();
+                return await elements.ToListAsync();
             }
             var ex = new NoElementsException();
             _logMessageManager.LogFailure(ex.Message);
             throw ex;
         }
 
-        public TEntity Update(TEntity entity)
+        public async Task<TEntity> Update(TEntity entity)
         {
             _logMessageManager.LogEntityUpdate(entity);
-            var Entity = _context.Set<TEntity>().Find(entity.Id);
+            var Entity = await _context.Set<TEntity>().FindAsync(entity.Id);
             if (Entity != null)
             {
                 _context.Entry(Entity).CurrentValues.SetValues(entity);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
                 _logMessageManager.LogSuccess();
                 return Entity;
             }

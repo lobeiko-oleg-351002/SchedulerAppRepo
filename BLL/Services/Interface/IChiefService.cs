@@ -11,6 +11,6 @@ namespace BLL.Services.Interface
 {
     public interface IChiefService : IService<ChiefViewModel, ChiefCreateModel>
     {
-        public List<ChiefViewModel> GetByProfileDescription(string tag);
+        public Task<List<ChiefViewModel>> GetByProfileDescription(string tag);
     }
 }

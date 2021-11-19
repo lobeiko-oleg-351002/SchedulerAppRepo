@@ -1,6 +1,7 @@
 ﻿using DAL.Exceptions;
 using DAL.Repositories.Interface;
 using DAL.Repositories.Logging;
+using Microsoft.EntityFrameworkCore;
 using SchedulerMigrations.Data;
 using SchedulerModels;
 using System;
@@ -18,10 +19,10 @@ namespace DAL.Repositories
             
         }
 
-        public List<Chief> GetByProfileDescription(string tag)
+        public async Task<List<Chief>> GetByProfileDescription(string tag)
         {
             _logMessageManager.LogCustomMessage("GetByProfileDescription: " + tag);
-            var elements = _context.Set<Chief>().Where(e => e.Profile.Contains(tag));
+            var elements = await _context.Set<Chief>().AsQueryable().Where(e => e.Profile.Contains(tag)).ToListAsync();
             if (elements.Any())
             {
                 _logMessageManager.LogSuccess();
@@ -32,15 +33,15 @@ namespace DAL.Repositories
             throw ex;
         }
 
-        public override Chief Create(Chief entity)
+        public override async Task<Chief> Create(Chief entity)
         {
             try
             {
                 _logMessageManager.LogEntityCreation(entity);
-                entity.Role = _context.Roles.FirstOrDefault(role => role.Id == entity.Role.Id);
-                var result = _context.Set<Chief>().Add(entity).Entity;
-                _context.SaveChanges();
-                return result;
+                entity.Role = await _context.Roles.FirstOrDefaultAsync(role => role.Id == entity.Role.Id);
+                var result = await _context.Set<Chief>().AddAsync(entity);
+                await _context.SaveChangesAsync();
+                return result.Entity;
             }
             catch(Exception ex)
             {

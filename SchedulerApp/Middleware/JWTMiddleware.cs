@@ -33,14 +33,14 @@ namespace SchedulerApp.Middleware
             await _next(context);
         }
 
-        private void attachUserToContext(HttpContext context, IStudentService studentService, string token)
+        private async void attachUserToContext(HttpContext context, IStudentService studentService, string token)
         {
             JwtSecurityTokenHandler TokenHandler = new JwtSecurityTokenHandler();
             TokenHandler.ValidateToken(token, AuthOptions.CreateValidationParameters(), out SecurityToken validatedToken);
 
             JwtSecurityToken jwtToken = (JwtSecurityToken)validatedToken;
             var userId = Guid.Parse(jwtToken.Claims.First(x => x.Type == "nameid").Value);
-            StudentViewModel identity = studentService.Get(userId);
+            StudentViewModel identity = await studentService.Get(userId);
 
             var user = new ClaimsPrincipal(AuthOptions.CreateClaimsIdentity(identity, token));
             context.User = user;

@@ -34,8 +34,8 @@ namespace BLL.Converters
         {
             YEvent result = new();
             result.Id = model.Id;
-            result.EventTemplate = _eventTemplateRepository.Get(model.EventTemplateId);
-            result.Chief = _chiefRepository.Get(model.ChiefId);
+            result.EventTemplate = _eventTemplateRepository.Get(model.EventTemplateId).Result;
+            result.Chief = _chiefRepository.Get(model.ChiefId).Result;
 
             return result;
         }

@@ -25,7 +25,7 @@ namespace BLL.Converters
             Subscriber result = new Subscriber
             {
                 Id = model.Id,
-                Student = _studentRepository.Get(model.StudentId),
+                Student = _studentRepository.Get(model.StudentId).Result,
             };
             return result;
         }

@@ -26,12 +26,13 @@ namespace BLL.Services
             _userValidationService = userValidationService;
         }
 
-        public StudentViewModel GetByNameAndPassword(string name, string password)
+        public async Task<StudentViewModel> GetByNameAndPassword(string name, string password)
         {
             _userValidationService.ValidateNameAndPassword(name, password);
             try
             {
-                return _converter.ConvertToViewModel(((IStudentRepository)_repository).GetByNameAndPassword(name, password));
+                var entity = await ((IStudentRepository)_repository).GetByNameAndPassword(name, password);
+                return _converter.ConvertToViewModel(entity);
             }
             catch (ItemNotFoundException)
             {
@@ -39,16 +40,16 @@ namespace BLL.Services
             }
         }
 
-        public override StudentViewModel Create(StudentCreateModel entity)
+        public override async Task<StudentViewModel> Create(StudentCreateModel entity)
         {
             _userValidationService.ValidateNewUser(_converter.ConvertToEntity(entity));
-            return base.Create(entity);
+            return await base.Create(entity);
         }
 
-        public override StudentViewModel Update(StudentCreateModel entity)
+        public override async Task<StudentViewModel> Update(StudentCreateModel entity)
         {
             _userValidationService.ValidateNewUser(_converter.ConvertToEntity(entity));
-           return  base.Update(entity);
+           return await base.Update(entity);
         }
     }
 }

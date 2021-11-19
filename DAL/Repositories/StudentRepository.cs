@@ -19,10 +19,10 @@ namespace DAL.Repositories
 
         }
 
-        public Student GetByNameAndPassword(string name, string password)
+        public async Task<Student> GetByNameAndPassword(string name, string password)
         {
             _logMessageManager.LogCustomMessage("GetByNameAndPassword. Name: " + name + " Password: " + password);
-            var entity = _context.Students.Include(role => role.Role).FirstOrDefault(e => (e.Name == name) && (e.Password == password));
+            var entity = await _context.Students.Include(role => role.Role).FirstOrDefaultAsync(e => (e.Name == name) && (e.Password == password));
             if (entity == null)
             {
                 var ex = new ItemNotFoundException();
@@ -33,10 +33,10 @@ namespace DAL.Repositories
             return entity;
         }
 
-        public override Student Get(Guid id)
+        public override async Task<Student> Get(Guid id)
         {
             _logMessageManager.LogGet(id);
-            Student student = _context.Students.Include(role => role.Role).FirstOrDefault(user => user.Id == id);
+            Student student = await _context.Students.Include(role => role.Role).FirstOrDefaultAsync(user => user.Id == id);
             if (student == null)
             {
                 var ex = new ItemNotFoundException();
@@ -47,14 +47,14 @@ namespace DAL.Repositories
             return student;
         }
 
-        public override List<Student> GetAll()
+        public override async Task<List<Student>> GetAll()
         {           
             _logMessageManager.LogGetAll();
-            var elements = _context.Students.Include(role => role.Role).Select(e => e);
+            var elements = _context.Students.Include(role => role.Role).AsQueryable();
             if (elements.Any())
             {
                 _logMessageManager.LogSuccess();
-                return elements.ToList();
+                return await elements.ToListAsync();
             }
             var ex = new NoElementsException();
             _logMessageManager.LogFailure(ex.Message);
