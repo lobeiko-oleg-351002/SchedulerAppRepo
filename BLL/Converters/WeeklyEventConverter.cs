@@ -1,4 +1,5 @@
 ﻿using BLL.Converters.Interface;
+using DAL.Repositories.Interface;
 using SchedulerModels;
 using SchedulerViewModels;
 using SchedulerViewModels.CreateModels;
@@ -13,8 +14,9 @@ namespace BLL.Converters
     public class WeeklyEventConverter : EventConverter<WeeklyEventCreateModel, WeeklyEventViewModel, WeeklyEvent>, IWeeklyEventConverter
     {
         private readonly IWeeklyEventTimeConverter _weeklyEventTimeConverter;
-        public WeeklyEventConverter(IWeeklyEventTimeConverter weeklyEventTimeConverter, ISubscriberConverter subscriberConverter, IEventTemplateConverter eventTemplateConverter, IChiefConverter chiefConverter)
-            : base(subscriberConverter, eventTemplateConverter, chiefConverter)
+        public WeeklyEventConverter(IWeeklyEventTimeConverter weeklyEventTimeConverter, ISubscriberConverter subscriberConverter, IEventTemplateConverter eventTemplateConverter, 
+            IChiefConverter chiefConverter, IEventTemplateRepository eventTemplateRepository, IChiefRepository chiefRepository)
+            : base(subscriberConverter, eventTemplateConverter, chiefConverter, eventTemplateRepository, chiefRepository)
         {
             _weeklyEventTimeConverter = weeklyEventTimeConverter ?? throw new ArgumentNullException(nameof(weeklyEventTimeConverter));
         }

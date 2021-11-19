@@ -1,4 +1,5 @@
 ﻿using BLL.Converters.Interface;
+using DAL.Repositories.Interface;
 using SchedulerModels;
 using SchedulerViewModels;
 using SchedulerViewModels.CreateModels;
@@ -12,8 +13,8 @@ namespace BLL.Converters
 {
     public class SingleEventConverter : EventConverter<SingleEventCreateModel, SingleEventViewModel, SingleEvent>, ISingleEventConverter
     {
-        public SingleEventConverter(ISubscriberConverter subscriberConverter, IEventTemplateConverter eventTemplateConverter, IChiefConverter chiefConverter) 
-            : base(subscriberConverter, eventTemplateConverter, chiefConverter)
+        public SingleEventConverter(ISubscriberConverter subscriberConverter, IEventTemplateConverter eventTemplateConverter, IChiefConverter chiefConverter, IEventTemplateRepository eventTemplateRepository,
+            IChiefRepository chiefRepository) : base(subscriberConverter, eventTemplateConverter, chiefConverter, eventTemplateRepository, chiefRepository)
         {
             
         }

@@ -8,6 +8,6 @@ namespace SchedulerViewModels.CreateModels
 {
     public class SubscriberCreateModel : CreateModel
     {
-        public StudentViewModel StudentViewModel { get; set; }
+        public Guid StudentId { get; set; }
     }
 }

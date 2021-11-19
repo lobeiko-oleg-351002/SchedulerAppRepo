@@ -8,7 +8,7 @@ namespace SchedulerViewModels.CreateModels
 {
     public class EventCreateModel : CreateModel
     {
-        public EventTemplateCreateModel EventTemplateCreateModel { get; set; }
-        public ChiefViewModel ChiefViewModel { get; set; }
+        public Guid EventTemplateId { get; set; }
+        public Guid ChiefId { get; set; }
     }
 }

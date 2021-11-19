@@ -1,4 +1,5 @@
 ﻿using BLL.Converters.Interface;
+using DAL.Repositories.Interface;
 using SchedulerModels;
 using SchedulerViewModels;
 using SchedulerViewModels.CreateModels;
@@ -18,18 +19,23 @@ namespace BLL.Converters
         private readonly ISubscriberConverter _subscriberConverter;
         private readonly IEventTemplateConverter _eventTemplateConverter;
         private readonly IChiefConverter _chiefConverter;
-        public EventConverter(ISubscriberConverter subscriberConverter, IEventTemplateConverter eventTemplateConverter, IChiefConverter chiefConverter)
+        private readonly IChiefRepository _chiefRepository;
+        private readonly IEventTemplateRepository _eventTemplateRepository;
+        public EventConverter(ISubscriberConverter subscriberConverter, IEventTemplateConverter eventTemplateConverter, IChiefConverter chiefConverter, IEventTemplateRepository eventTemplateRepository,
+            IChiefRepository chiefRepository)
         {
             _subscriberConverter = subscriberConverter ?? throw new ArgumentNullException(nameof(subscriberConverter));
             _eventTemplateConverter = eventTemplateConverter ?? throw new ArgumentNullException(nameof(eventTemplateConverter));
             _chiefConverter = chiefConverter ?? throw new ArgumentNullException(nameof(chiefConverter));
+            _chiefRepository = chiefRepository ?? throw new ArgumentNullException(nameof(chiefRepository));
+            _eventTemplateRepository = eventTemplateRepository ?? throw new ArgumentNullException(nameof(eventTemplateRepository));
         }
         public virtual YEvent ConvertToEntity(TEvent model)
         {
             YEvent result = new();
             result.Id = model.Id;
-           // result.EventTemplate = _eventTemplateConverter.ConvertToEntity(model.EventTemplateViewModel);
-           // result.Chief = _chiefConverter.ConvertToEntity(model.ChiefViewModel);
+            result.EventTemplate = _eventTemplateRepository.Get(model.EventTemplateId);
+            result.Chief = _chiefRepository.Get(model.ChiefId);
 
             return result;
         }
