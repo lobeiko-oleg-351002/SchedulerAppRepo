@@ -60,23 +60,5 @@ namespace DAL.Repositories
             _logMessageManager.LogFailure(ex.Message);
             throw ex;
         }
-
-        public override async Task<Student> Create(Student entity)
-        {
-            try
-            {
-                entity.Id = new Guid();
-                _logMessageManager.LogEntityCreation(entity);
-                entity.Role = await _context.Roles.FirstOrDefaultAsync(role => role.Id == entity.Role.Id);
-                var result = await _context.Set<Student>().AddAsync(entity);
-                await _context.SaveChangesAsync();
-                return result.Entity;
-            }
-            catch (Exception ex)
-            {
-                _logMessageManager.LogFailure(ex.Message);
-                throw new DalCreateException(ex.Message);
-            }
-        }
     }
 }

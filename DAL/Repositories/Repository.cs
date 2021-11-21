@@ -30,7 +30,6 @@ namespace DAL.Repositories
         {
             try
             {
-                entity.Id = new Guid();
                 _logMessageManager.LogEntityCreation(entity);
                 var result = await _context.Set<TEntity>().AddAsync(entity);
                 await _context.SaveChangesAsync();

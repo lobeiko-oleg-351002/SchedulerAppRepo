@@ -1,12 +1,10 @@
-﻿using BLL.Caching;
-using BLL.Converters;
+﻿using BLL.Converters;
 using BLL.Converters.Interface;
 using BLL.Exceptions;
 using BLL.Services.Interface;
 using BLL.ValidationServices.Interface;
 using DAL.Exceptions;
 using DAL.Repositories.Interface;
-using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using SchedulerModels;
 using SchedulerViewModels;
@@ -22,12 +20,10 @@ namespace BLL.Services
     public class StudentService : Service<Student, StudentViewModel, StudentCreateModel>, IStudentService
     {
         private readonly IUserValidationService _userValidationService;
-        private readonly IUserCacheService _userCacheService;
-        public StudentService(IStudentRepository studentRepository, IStudentConverter studentConverter, IUserValidationService userValidationService, IUserCacheService userCacheService) 
+        public StudentService(IStudentRepository studentRepository, IStudentConverter studentConverter, IUserValidationService userValidationService) 
             : base(studentRepository, studentConverter)
         {
             _userValidationService = userValidationService;
-            _userCacheService = userCacheService;
         }
 
         public async Task<StudentViewModel> GetByNameAndPassword(string name, string password)
@@ -47,26 +43,13 @@ namespace BLL.Services
         public override async Task<StudentViewModel> Create(StudentCreateModel entity)
         {
             _userValidationService.ValidateNewUser(_converter.ConvertToEntity(entity));
-            var result =  await base.Create(entity);
-            _userCacheService.SetUserToCache(result);
-            return result;
+            return await base.Create(entity);
         }
 
         public override async Task<StudentViewModel> Update(StudentCreateModel entity)
         {
             _userValidationService.ValidateNewUser(_converter.ConvertToEntity(entity));
            return await base.Update(entity);
-        }
-
-        public override async Task<StudentViewModel> Get(Guid id)
-        {
-            StudentViewModel user = _userCacheService.GetUserFromCache(id);
-            if (user == null)
-            {
-                user = await base.Get(id);
-                _userCacheService.SetUserToCache(user);
-            }
-            return user;
         }
     }
 }

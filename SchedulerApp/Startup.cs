@@ -28,7 +28,6 @@ using BLL.ValidationServices;
 using Serilog;
 using DAL.Repositories.Logging;
 using SchedulerModels;
-using BLL.Caching;
 
 namespace SchedulerApp
 {
@@ -52,8 +51,6 @@ namespace SchedulerApp
             services.AddRazorPages();
 
             services.AddControllers();
-
-            services.AddSingleton<IUserCacheService, UserCacheService>();
             services.AddScoped<ILogMessageManager<Student>, LogMessageManager<Student>>();
             services.AddScoped<IUserValidationService, UserValidationService>();
             services.AddScoped<IStudentRepository, StudentRepository>();

@@ -17,11 +17,10 @@ namespace SchedulerViewModels.CreateModels
 
         public ChiefCreateModel(StudentCreateModel baseObject)
         {
-            this.Id = baseObject.Id;
+            this.Id = base.Id;
             this.Email = baseObject.Email;
             this.Name = baseObject.Name;
             this.Password = baseObject.Password;
-            this.Role = baseObject.Role;
         }
     }
 }
