@@ -19,6 +19,7 @@ namespace SchedulerViewModels
         {
             this.Id = baseObject.Id;
             this.Name = baseObject.Name;
+            this.Role = baseObject.Role;
         }
     }
 }
