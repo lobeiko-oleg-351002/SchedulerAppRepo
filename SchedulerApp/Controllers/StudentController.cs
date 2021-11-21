@@ -30,19 +30,20 @@ namespace SchedulerApp.Controllers
             return Ok(viewModel);
         }
 
-        [Authorize(Roles = "Admin")]
+       // [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            try
-            {
-                var result = await _studentService.GetAll();
-                return Ok(result);
-            }
-            catch
-            {
-                throw;
-            }
+            var result = await _studentService.GetAll();
+            return Ok(result);
+        }
+
+        [HttpGet]
+        [Route("{id}")]
+        public async Task<IActionResult> Get(Guid id)
+        {
+            var result = await _studentService.Get(id);
+            return Ok(result);
         }
 
         [HttpPut]
