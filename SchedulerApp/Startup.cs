@@ -29,6 +29,8 @@ using Serilog;
 using DAL.Repositories.Logging;
 using SchedulerModels;
 using BLL.Caching;
+using SchedulerApp.Validation;
+using FluentValidation.AspNetCore;
 
 namespace SchedulerApp
 {
@@ -50,6 +52,15 @@ namespace SchedulerApp
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<SchedulerDbContext>();
             services.AddRazorPages();
+
+            services.AddMvc(options =>
+                {
+                    options.Filters.Add(new ValidationFilter());
+                })
+                    .AddFluentValidation(options =>
+                    {
+                        options.RegisterValidatorsFromAssemblyContaining<Startup>();
+                    });
 
             services.AddControllers();
 
