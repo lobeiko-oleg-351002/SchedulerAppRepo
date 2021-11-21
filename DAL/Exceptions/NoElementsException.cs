@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DAL.Exceptions
 {
-    public class NoElementsException : Exception
+    public class NoElementsException : DalException
     {
         public NoElementsException() : base("No elements in Database")
         {

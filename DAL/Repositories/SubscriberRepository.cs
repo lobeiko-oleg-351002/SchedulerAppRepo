@@ -1,4 +1,5 @@
 ﻿using DAL.Repositories.Interface;
+using DAL.Repositories.Logging;
 using SchedulerMigrations.Data;
 using SchedulerModels;
 using System;
@@ -11,7 +12,7 @@ namespace DAL.Repositories
 {
     public class SubscriberRepository : Repository<Subscriber>, ISubscriberRepository
     {
-        public SubscriberRepository(SchedulerDbContext context) : base(context)
+        public SubscriberRepository(SchedulerDbContext context, ILogMessageManager<Subscriber> logMessageManager) : base(context, logMessageManager)
         {
 
         }

@@ -1,6 +1,7 @@
 ﻿using BLL.Converters.Interface;
 using SchedulerModels;
 using SchedulerViewModels;
+using SchedulerViewModels.CreateModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,14 +12,15 @@ namespace BLL.Converters
 {
     public class StudentConverter : IStudentConverter
     {
-        public Student ConvertToEntity(StudentViewModel model)
+        public Student ConvertToEntity(StudentCreateModel model)
         {
             Student result = new Student
             {
                 Id = model.Id,
                 Email = model.Email,
                 Password = model.Password,
-                Name = model.Name
+                Name = model.Name, 
+                Role = model.Role
             };
             return result;
         }
@@ -28,9 +30,8 @@ namespace BLL.Converters
             StudentViewModel result = new StudentViewModel
             {
                 Id = entity.Id,
-                Email = entity.Email,
-                Password = entity.Password,
-                Name = entity.Name
+                Name = entity.Name,
+                Role = entity.Role
             };
             return result;
         }

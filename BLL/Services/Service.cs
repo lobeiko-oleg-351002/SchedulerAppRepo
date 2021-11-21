@@ -3,6 +3,7 @@ using BLL.Services.Interface;
 using DAL.Repositories.Interface;
 using SchedulerModels;
 using SchedulerViewModels;
+using SchedulerViewModels.CreateModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,43 +12,46 @@ using System.Threading.Tasks;
 
 namespace BLL.Services
 {
-    public class Service<TEntity, UEntity> : IService<UEntity>
+    public class Service<TEntity, UEntity, YEntity> : IService<UEntity, YEntity>
          where TEntity : Entity
          where UEntity : ViewModel
+         where YEntity : CreateModel
     {
-        protected readonly IRepository<TEntity> Repository;
-        protected readonly IConverter<TEntity, UEntity> Converter;
-        public Service(IRepository<TEntity> repository, IConverter<TEntity, UEntity> converter)
+        protected readonly IRepository<TEntity> _repository;
+        protected readonly IConverter<YEntity, UEntity, TEntity> _converter;
+        public Service(IRepository<TEntity> repository, IConverter<YEntity, UEntity, TEntity> converter)
         {
-            Repository = repository;
-            Converter = converter;
+            _repository = repository;
+            _converter = converter;
         }
 
-        public virtual void Create(UEntity entity)
-        {
-            Repository.Create(Converter.ConvertToEntity(entity));
+        public virtual async Task<UEntity> Create(YEntity entity)
+        { 
+            TEntity result = await _repository.Create(_converter.ConvertToEntity(entity));
+            return _converter.ConvertToViewModel(result);
         }
 
         public virtual void Delete(Guid id)
-        {
-            Repository.Delete(id);
+        { 
+            _repository.Delete(id);
         }
 
-        public virtual List<UEntity> GetAll()
+        public virtual async Task<List<UEntity>> GetAll()
         {
-            var result = new List<UEntity>();
-            Repository.GetAll().ForEach(item => result.Add(Converter.ConvertToViewModel(item)));
-            return result;
+            var entities = await _repository.GetAll();
+            return entities.Select(_converter.ConvertToViewModel).ToList();
         }
 
-        public virtual UEntity Get(Guid id)
+        public virtual async Task<UEntity> Get(Guid id)
         {
-            return Converter.ConvertToViewModel(Repository.Get(id));
+            var entity = await _repository.Get(id);
+            return _converter.ConvertToViewModel(entity);
         }
 
-        public virtual void Update(UEntity entity)
+        public virtual async Task<UEntity> Update(YEntity entity)
         {
-            Repository.Update(Converter.ConvertToEntity(entity));
+            TEntity result = await _repository.Update(_converter.ConvertToEntity(entity));
+            return _converter.ConvertToViewModel(result);
         }
     }
 }

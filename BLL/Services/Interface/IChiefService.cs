@@ -1,5 +1,6 @@
 ﻿using SchedulerModels;
 using SchedulerViewModels;
+using SchedulerViewModels.CreateModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,8 +9,8 @@ using System.Threading.Tasks;
 
 namespace BLL.Services.Interface
 {
-    public interface IChiefService : IService<ChiefViewModel>
+    public interface IChiefService : IService<ChiefViewModel, ChiefCreateModel>
     {
-        public List<ChiefViewModel> GetByProfile(string tag);
+        public Task<List<ChiefViewModel>> GetByProfileDescription(string tag);
     }
 }

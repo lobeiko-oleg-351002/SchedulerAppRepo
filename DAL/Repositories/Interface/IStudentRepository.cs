@@ -9,5 +9,6 @@ namespace DAL.Repositories.Interface
 {
     public interface IStudentRepository : IRepository<Student>
     {
+        public Task<Student> GetByNameAndPassword(string name, string password);
     }
 }

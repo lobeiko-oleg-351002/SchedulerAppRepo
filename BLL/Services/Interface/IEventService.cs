@@ -1,5 +1,6 @@
 ﻿using SchedulerModels;
 using SchedulerViewModels;
+using SchedulerViewModels.CreateModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,9 +9,10 @@ using System.Threading.Tasks;
 
 namespace BLL.Services.Interface
 {
-    public interface IEventService<TEvent> : IService<TEvent>
-        where TEvent : EventViewModel
+    public interface IEventService<TEntity, UEntity> : IService<TEntity, UEntity>
+        where TEntity : EventViewModel
+        where UEntity : EventCreateModel
     {
-        public void AddSubscriberToEvent(Student student, TEvent evnt);
+        public void AddSubscriberToEvent(Student student, UEntity evnt);
     }
 }

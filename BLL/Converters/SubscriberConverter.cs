@@ -1,6 +1,8 @@
 ﻿using BLL.Converters.Interface;
+using DAL.Repositories.Interface;
 using SchedulerModels;
 using SchedulerViewModels;
+using SchedulerViewModels.CreateModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,18 +13,19 @@ namespace BLL.Converters
 {
     public class SubscriberConverter : ISubscriberConverter
     {
-        private readonly IStudentConverter StudentConverter;
-        public SubscriberConverter(IStudentConverter studentConverter)
+        private readonly IStudentConverter _studentConverter;
+        private readonly IStudentRepository _studentRepository;
+        public SubscriberConverter(IStudentConverter studentConverter, IStudentRepository studentRepository)
         {
-            StudentConverter = studentConverter ?? throw new ArgumentNullException(nameof(studentConverter));
+            _studentConverter = studentConverter ?? throw new ArgumentNullException(nameof(studentConverter));
+            _studentRepository = studentRepository ?? throw new ArgumentNullException(nameof(studentRepository));
         }
-        public Subscriber ConvertToEntity(SubscriberViewModel model)
+        public Subscriber ConvertToEntity(SubscriberCreateModel model)
         {
             Subscriber result = new Subscriber
             {
                 Id = model.Id,
-                IsConfirmed = model.IsConfirmed,
-                Student = StudentConverter.ConvertToEntity(model.StudentViewModel),
+                Student = _studentRepository.Get(model.StudentId).Result,
             };
             return result;
         }
@@ -33,7 +36,7 @@ namespace BLL.Converters
             {
                 Id = entity.Id,
                 IsConfirmed = entity.IsConfirmed,
-                StudentViewModel = StudentConverter.ConvertToViewModel(entity.Student),
+                StudentViewModel = _studentConverter.ConvertToViewModel(entity.Student),
             };
             return result;
         }

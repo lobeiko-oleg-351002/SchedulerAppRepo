@@ -29,6 +29,7 @@ namespace SchedulerModels
             this.Name = baseObject.Name;
             this.Password = baseObject.Password;
             this.Email = baseObject.Email;
+            this.Role = baseObject.Role;
         }
     }
 }

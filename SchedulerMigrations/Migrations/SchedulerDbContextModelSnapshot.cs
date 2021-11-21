@@ -66,37 +66,37 @@ namespace SchedulerMigrations.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("c177818c-ec63-4ce6-a8c9-725da08fdc46"),
+                            Id = new Guid("ec51a38b-6e66-495e-8d06-521968615219"),
                             Name = "Monday"
                         },
                         new
                         {
-                            Id = new Guid("6164bcfb-31f0-42c7-a6b7-1324aefd150b"),
+                            Id = new Guid("8d658792-fd18-43ae-83dc-cc590deafe6e"),
                             Name = "Tuesday"
                         },
                         new
                         {
-                            Id = new Guid("c9d300a6-dc45-4e03-945f-a36c949874ce"),
+                            Id = new Guid("316a7b38-b201-43ad-bcda-97e471afd7b9"),
                             Name = "Wednesday"
                         },
                         new
                         {
-                            Id = new Guid("97e766e6-c8b0-49c8-81b8-42b736ac3b56"),
+                            Id = new Guid("6e024dd4-3bb2-4950-aa86-89a690e1f6ae"),
                             Name = "Thursday"
                         },
                         new
                         {
-                            Id = new Guid("99063a5d-b63a-4e6b-b3a4-f0765b34a65c"),
+                            Id = new Guid("2d452b7c-1fc7-4177-95db-54ea33a48551"),
                             Name = "Friday"
                         },
                         new
                         {
-                            Id = new Guid("72245cae-9fbe-439a-a073-2e83736a1d26"),
+                            Id = new Guid("9560f26d-e357-49b2-9bb8-d015cfac0a99"),
                             Name = "Saturday"
                         },
                         new
                         {
-                            Id = new Guid("1a4571de-c60c-44d2-8caa-688704fbaefd"),
+                            Id = new Guid("d876720f-172c-4197-a8b3-80ab4b73e278"),
                             Name = "Sunday"
                         });
                 });
@@ -146,6 +146,33 @@ namespace SchedulerMigrations.Migrations
                     b.ToTable("EventTemplate");
                 });
 
+            modelBuilder.Entity("SchedulerModels.Role", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Role");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("9d0c63ea-1c81-4918-aa9e-4ae46d145263"),
+                            Name = "Admin"
+                        },
+                        new
+                        {
+                            Id = new Guid("5c83a1ff-21e9-4153-bf52-94d68a375bd6"),
+                            Name = "User"
+                        });
+                });
+
             modelBuilder.Entity("SchedulerModels.Student", b =>
                 {
                     b.Property<Guid>("Id")
@@ -164,21 +191,26 @@ namespace SchedulerMigrations.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid?>("RoleId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("RoleId");
 
                     b.ToTable("Student");
 
                     b.HasData(
                         new
                         {
-                            Id = new Guid("55d6a505-6d48-4dd4-9cf4-0bef15761ca1"),
+                            Id = new Guid("bd7a8d3f-b18f-4107-8cd7-b02b61c8a452"),
                             Email = "normandy@gmail.com",
                             Name = "John",
                             Password = "shepard2072"
                         },
                         new
                         {
-                            Id = new Guid("75057fa2-84ce-4f20-b411-f3405ccd9b0d"),
+                            Id = new Guid("091ac8de-5614-423c-aac5-36fced77cd94"),
                             Email = "eugene@gmail.com",
                             Name = "Raynor",
                             Password = "raiders44"
@@ -258,7 +290,7 @@ namespace SchedulerMigrations.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("7db454ca-6345-4d17-a630-fa725e612b07"),
+                            Id = new Guid("80688d76-3197-407d-bc61-69f6aedce3cb"),
                             Email = "totalit280@gmail.com",
                             Name = "Totalit",
                             Password = "vitebsk2021",
@@ -266,7 +298,7 @@ namespace SchedulerMigrations.Migrations
                         },
                         new
                         {
-                            Id = new Guid("5ce9045b-ccd6-4dbd-9afe-aabd5706de03"),
+                            Id = new Guid("dbf823ae-0aef-4307-b215-c18892309f01"),
                             Email = "mlarsm@gmail.com",
                             Name = "Lars Ulrich",
                             Password = "drumdrum",
@@ -327,6 +359,15 @@ namespace SchedulerMigrations.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
+            modelBuilder.Entity("SchedulerModels.Student", b =>
+                {
+                    b.HasOne("SchedulerModels.Role", "Role")
+                        .WithMany("Students")
+                        .HasForeignKey("RoleId");
+
+                    b.Navigation("Role");
+                });
+
             modelBuilder.Entity("SchedulerModels.Subscriber", b =>
                 {
                     b.HasOne("SchedulerModels.Event", "Event")
@@ -380,6 +421,11 @@ namespace SchedulerMigrations.Migrations
             modelBuilder.Entity("SchedulerModels.Event", b =>
                 {
                     b.Navigation("Subscribers");
+                });
+
+            modelBuilder.Entity("SchedulerModels.Role", b =>
+                {
+                    b.Navigation("Students");
                 });
 
             modelBuilder.Entity("SchedulerModels.Student", b =>

@@ -1,4 +1,5 @@
 ﻿using DAL.Repositories.Interface;
+using DAL.Repositories.Logging;
 using SchedulerMigrations.Data;
 using SchedulerModels;
 using System;
@@ -12,7 +13,7 @@ namespace DAL.Repositories
     public class EventRepository<TEntity> : Repository<TEntity>, IEventRepository<TEntity>
         where TEntity : Event
     {
-        public EventRepository(SchedulerDbContext context) : base(context)
+        public EventRepository(SchedulerDbContext context, ILogMessageManager<TEntity> logMessageManager) : base(context, logMessageManager)
         {
 
         }

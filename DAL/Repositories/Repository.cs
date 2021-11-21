@@ -1,11 +1,15 @@
 ﻿using DAL.Exceptions;
 using DAL.Repositories.Interface;
+using DAL.Repositories.Logging;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using SchedulerMigrations.Data;
 using SchedulerModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace DAL.Repositories
@@ -13,52 +17,91 @@ namespace DAL.Repositories
     public class Repository<TEntity> : IRepository<TEntity>
         where TEntity : Entity
     {
-        protected readonly SchedulerDbContext Context;
-        public Repository(SchedulerDbContext context)
+        protected readonly SchedulerDbContext _context;
+        protected readonly ILogMessageManager<TEntity> _logMessageManager;
+        
+        public Repository(SchedulerDbContext context, ILogMessageManager<TEntity> logMessageManager)
         {
-            Context = context ?? throw new ArgumentNullException(nameof(context));
+            _context = context ?? throw new ArgumentNullException(nameof(context));
+            _logMessageManager = logMessageManager;
         }
 
-        public TEntity Create(TEntity entity)
+        public virtual async Task<TEntity> Create(TEntity entity)
         {
-            var result = Context.Set<TEntity>().Add(entity).Entity;
-            Context.SaveChanges();
-            return result;
+            try
+            {
+                _logMessageManager.LogEntityCreation(entity);
+                var result = await _context.Set<TEntity>().AddAsync(entity);
+                await _context.SaveChangesAsync();
+                _logMessageManager.LogSuccess();
+                return result.Entity;
+            }
+            catch(Exception ex)
+            {
+                _logMessageManager.LogFailure(ex.Message);
+                throw new DalCreateException(ex.Message);
+            }
         }
 
-        public void Delete(Guid id)
+        public async void Delete(Guid id)
         {
-            var entity = Context.Set<TEntity>().Single(e => e.Id == id);
-            Context.Set<TEntity>().Remove(entity);
-            Context.SaveChanges();
+            try
+            {
+                _logMessageManager.LogDelete(id);
+                var entity = _context.Set<TEntity>().Single(e => e.Id == id);
+                _context.Set<TEntity>().Remove(entity);
+                await _context.SaveChangesAsync();
+                _logMessageManager.LogSuccess();
+            }
+            catch(Exception ex)
+            {
+                _logMessageManager.LogFailure(ex.Message);
+                throw new DalDeleteException(ex.Message);
+            }
         }
 
-        public TEntity Get(Guid id)
+        public virtual async Task<TEntity> Get(Guid id)
         {
-            var entity = Context.Set<TEntity>().FirstOrDefault(e => e.Id == id);
-            return entity ?? throw new ItemNotFoundException();
+            _logMessageManager.LogGet(id);
+            var entity = await _context.Set<TEntity>().FindAsync(id);
+            if (entity != null)
+            {
+                _logMessageManager.LogSuccess();
+                return entity;
+            }
+            var ex = new ItemNotFoundException();
+            _logMessageManager.LogFailure(ex.Message);
+            throw ex;
         }
 
-        public List<TEntity> GetAll()
+        public virtual async Task<List<TEntity>> GetAll()
         {
-            var elements = Context.Set<TEntity>().Select(e => e);
+            _logMessageManager.LogGetAll();
+            var elements = _context.Set<TEntity>().AsQueryable();
             if (elements.Any())
             {
-                return elements.ToList();
+                _logMessageManager.LogSuccess();
+                return await elements.ToListAsync();
             }
-            else throw new NoElementsException();
+            var ex = new NoElementsException();
+            _logMessageManager.LogFailure(ex.Message);
+            throw ex;
         }
 
-        public TEntity Update(TEntity entity)
+        public async Task<TEntity> Update(TEntity entity)
         {
-            var Entity = Context.Set<TEntity>().Find(entity.Id);
+            _logMessageManager.LogEntityUpdate(entity);
+            var Entity = await _context.Set<TEntity>().FindAsync(entity.Id);
             if (Entity != null)
             {
-                Context.Entry(Entity).CurrentValues.SetValues(entity);
-                Context.SaveChanges();
+                _context.Entry(Entity).CurrentValues.SetValues(entity);
+                await _context.SaveChangesAsync();
+                _logMessageManager.LogSuccess();
                 return Entity;
             }
-            else throw new ItemNotFoundException();
+            var ex = new ItemNotFoundException();
+            _logMessageManager.LogFailure(ex.Message);
+            throw ex;
         }
     }
 }

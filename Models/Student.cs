@@ -23,5 +23,7 @@ namespace SchedulerModels
 
         public List<Chief> Chiefs { get; set; }
 
+        public Role Role { get; set; }
+
     }
 }

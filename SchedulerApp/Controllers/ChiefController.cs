@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SchedulerViewModels;
+using SchedulerViewModels.CreateModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,20 +14,26 @@ namespace SchedulerApp.Controllers
     [Route("[controller]/[action]")]
     public class ChiefController : ControllerBase
     {
-        private readonly IChiefService ChiefService;
-        private readonly ILogger<ChiefController> Logger;
+        private readonly IChiefService _chiefService;
 
-        public ChiefController(IChiefService chiefService, ILogger<ChiefController> logger)
+        public ChiefController(IChiefService chiefService)
         {
-            ChiefService = chiefService;
-            Logger = logger;
+            _chiefService = chiefService;
         }
 
         [HttpPost]
-        public IActionResult CreateUser(ChiefViewModel userModel)
+        public async Task<IActionResult> CreateUser(ChiefCreateModel userModel)
         {
-            ChiefService.Create(userModel);
-            return Ok(userModel);
+            var viewModel = await _chiefService.Create(userModel);
+            return Ok(viewModel);
+        }
+
+        [HttpGet]
+        [Route("{id}")]
+        public async Task<IActionResult> Get(Guid id)
+        {
+            var result = await _chiefService.Get(id);
+            return Ok(result);
         }
     }
 }

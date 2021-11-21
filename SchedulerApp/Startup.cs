@@ -19,6 +19,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using SchedulerApp.AuthorizationTokens;
+using SchedulerApp.Middleware;
+using BLL.ValidationServices.Interface;
+using BLL.ValidationServices;
+using Serilog;
+using DAL.Repositories.Logging;
+using SchedulerModels;
 
 namespace SchedulerApp
 {
@@ -42,10 +51,13 @@ namespace SchedulerApp
             services.AddRazorPages();
 
             services.AddControllers();
+            services.AddScoped<ILogMessageManager<Student>, LogMessageManager<Student>>();
+            services.AddScoped<IUserValidationService, UserValidationService>();
             services.AddScoped<IStudentRepository, StudentRepository>();
             services.AddScoped<IStudentConverter, StudentConverter>();
             services.AddScoped<IStudentService, StudentService>();
 
+            services.AddScoped<ILogMessageManager<Chief>, LogMessageManager<Chief>>();
             services.AddScoped<IChiefRepository, ChiefRepository>();
             services.AddScoped<IChiefConverter, ChiefConverter>();
             services.AddScoped<IChiefService, ChiefService>();
@@ -58,7 +70,35 @@ namespace SchedulerApp
                     Title = "ToDo API",
                     Description = "A simple example ASP.NET Core Web API",
                 });
+                var securityScheme = new OpenApiSecurityScheme
+                {
+                    Name = "JWT Authentication",
+                    Description = "Enter JWT Bearer token **_only_**",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "bearer", // must be lower case
+                    BearerFormat = "JWT",
+                    Reference = new OpenApiReference
+                    {
+                        Id = JwtBearerDefaults.AuthenticationScheme,
+                        Type = ReferenceType.SecurityScheme
+                    }
+                };
+                c.AddSecurityDefinition(securityScheme.Reference.Id, securityScheme);
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                    {
+                        {
+                            securityScheme, Array.Empty<string>()
+                        }
+                    });
             });
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                    .AddJwtBearer(options =>
+                    {
+                        options.RequireHttpsMetadata = false;
+                        options.TokenValidationParameters = AuthOptions.CreateValidationParameters();
+                    });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -69,8 +109,11 @@ namespace SchedulerApp
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseMiddleware<ExceptionMiddleware>();
+            app.UseSerilogRequestLogging();
+
             app.UseHttpsRedirection();
-            app.UseStaticFiles();
+           // app.UseStaticFiles();
 
             app.UseSwagger();
             app.UseSwaggerUI(c =>
@@ -80,6 +123,11 @@ namespace SchedulerApp
             });
 
             app.UseRouting();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
+
+            app.UseMiddleware<JWTMiddleware>();
 
             app.UseEndpoints(endpoints =>
             {

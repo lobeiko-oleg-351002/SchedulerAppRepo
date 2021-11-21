@@ -1,4 +1,5 @@
 ﻿using DAL.Repositories.Interface;
+using DAL.Repositories.Logging;
 using SchedulerMigrations.Data;
 using SchedulerModels;
 using System;
@@ -11,7 +12,7 @@ namespace DAL.Repositories
 {
     public class SingleEventRepository : EventRepository<SingleEvent>, ISingleEventRepository
     {
-        public SingleEventRepository(SchedulerDbContext context) : base(context)
+        public SingleEventRepository(SchedulerDbContext context, ILogMessageManager<SingleEvent> logMessageManager) : base(context, logMessageManager)
         {
 
         }
