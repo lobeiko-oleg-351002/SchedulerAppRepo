@@ -11,6 +11,6 @@ namespace BLL.Caching
     public interface IUserCacheService
     {
         public StudentViewModel GetUserFromCache(Guid userId);
-        public StudentViewModel SetUserToCache(StudentViewModel user);
+        public void SetUserToCache(StudentViewModel user);
     }
 }

@@ -9,24 +9,25 @@ using System.Threading.Tasks;
 
 namespace BLL.Caching
 {
-    public class UserCacheService : MemoryCache, IUserCacheService
+    public class MemoryUserCacheService : IUserCacheService
     {
         private const int EXPIRATION_TIME_MINUTES = 5;
-        public UserCacheService(IOptions<MemoryCacheOptions> options) : base(options)
+
+        private readonly IMemoryCache _cache;
+        public MemoryUserCacheService(IMemoryCache cache)
         {
-            
+            _cache = cache; 
         }
         public StudentViewModel GetUserFromCache(Guid userId)
         {
             StudentViewModel user;
-            this.TryGetValue(userId, out user);
+            _cache.TryGetValue(userId, out user);
             return user;
         }
 
-        public StudentViewModel SetUserToCache(StudentViewModel user)
+        public void SetUserToCache(StudentViewModel user)
         {
-            this.Set(user.Id, user, new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromMinutes(EXPIRATION_TIME_MINUTES)));
-            return user;
+            _cache.Set(user.Id, user, new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromMinutes(EXPIRATION_TIME_MINUTES)));
         }
     }
 }
