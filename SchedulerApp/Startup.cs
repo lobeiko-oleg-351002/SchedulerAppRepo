@@ -28,6 +28,12 @@ using BLL.ValidationServices;
 using Serilog;
 using DAL.Repositories.Logging;
 using SchedulerModels;
+using BLL.Caching;
+using SchedulerApp.Validation;
+using FluentValidation.AspNetCore;
+using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Caching.Memory;
+using SchedulerApp.Caching;
 
 namespace SchedulerApp
 {
@@ -48,7 +54,25 @@ namespace SchedulerApp
             services.AddDatabaseDeveloperPageExceptionFilter();
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<SchedulerDbContext>();
-            services.AddRazorPages();
+
+            services.AddMvc(options =>
+                {
+                    options.Filters.Add(new ValidationFilter());
+                })
+                    .AddFluentValidation(options =>
+                    {
+                        options.RegisterValidatorsFromAssemblyContaining<Startup>();
+                    });
+
+            services.AddTransient<CacheTypeResolver>();
+            services.AddTransient<MemoryUserCacheService>();
+            services.AddTransient<RedisUserCacheService>();
+            services.AddStackExchangeRedisCache(options =>
+            {
+                options.Configuration = "127.0.0.1:6379";
+            });
+            services.AddSingleton(provider => provider.GetService<CacheTypeResolver>().Resolve());
+
 
             services.AddControllers();
             services.AddScoped<ILogMessageManager<Student>, LogMessageManager<Student>>();
