@@ -6,8 +6,6 @@ using BLL.Services.Interface;
 using BLL.ValidationServices.Interface;
 using DAL.Exceptions;
 using DAL.Repositories.Interface;
-using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Logging;
 using SchedulerModels;
 using SchedulerViewModels;
 using SchedulerViewModels.CreateModels;

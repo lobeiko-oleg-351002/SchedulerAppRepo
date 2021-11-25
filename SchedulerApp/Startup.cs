@@ -75,7 +75,6 @@ namespace SchedulerApp
 
 
             services.AddControllers();
-
             services.AddScoped<ILogMessageManager<Student>, LogMessageManager<Student>>();
             services.AddScoped<IUserValidationService, UserValidationService>();
             services.AddScoped<IStudentRepository, StudentRepository>();
