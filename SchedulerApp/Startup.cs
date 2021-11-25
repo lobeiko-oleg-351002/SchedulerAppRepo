@@ -34,6 +34,10 @@ using FluentValidation.AspNetCore;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.Memory;
 using SchedulerApp.Caching;
+using SchedulerViewModels;
+using BLL.Caching.Base;
+using System.IO;
+using AppConfiguration;
 
 namespace SchedulerApp
 {
@@ -49,8 +53,11 @@ namespace SchedulerApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var appSettings = AppConfiguration.AppConfiguration.GetAppSettings(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"), Directory.GetCurrentDirectory());
+            services.AddSingleton(x => appSettings);
+
             services.AddDbContext<SchedulerDbContext>(options =>
-                options.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=aspnet-SchedulerApp-53bc9b9d-9d6a-45d4-8429-2a2761773502;Trusted_Connection=True;MultipleActiveResultSets=true"));
+                options.UseSqlServer(appSettings.ConnectionString));
             services.AddDatabaseDeveloperPageExceptionFilter();
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<SchedulerDbContext>();
@@ -65,13 +72,14 @@ namespace SchedulerApp
                     });
 
             services.AddTransient<CacheTypeResolver>();
-            services.AddTransient<MemoryUserCacheService>();
-            services.AddTransient<RedisUserCacheService>();
+            services.AddTransient<MemoryCacheService<StudentViewModel>>();
+            services.AddTransient<RedisCacheService<StudentViewModel>>();
             services.AddStackExchangeRedisCache(options =>
             {
-                options.Configuration = "127.0.0.1:6379";
+                options.Configuration = appSettings.RedisHostIp;
             });
             services.AddSingleton(provider => provider.GetService<CacheTypeResolver>().Resolve());
+            services.AddSingleton<UserCacheService>();
 
 
             services.AddControllers();

@@ -20,12 +20,12 @@ namespace BLL.Services
     public class StudentService : Service<Student, StudentViewModel, StudentCreateModel>, IStudentService
     {
         private readonly IUserValidationService _userValidationService;
-        private readonly IUserCacheService _userCacheService;
-        public StudentService(IStudentRepository studentRepository, IStudentConverter studentConverter, IUserValidationService userValidationService, IUserCacheService userCacheService) 
+        private readonly UserCacheService _cacheService;
+        public StudentService(IStudentRepository studentRepository, IStudentConverter studentConverter, IUserValidationService userValidationService, UserCacheService userCacheService) 
             : base(studentRepository, studentConverter)
         {
             _userValidationService = userValidationService;
-            _userCacheService = userCacheService;
+            _cacheService = userCacheService;
         }
 
         public async Task<StudentViewModel> GetByNameAndPassword(string name, string password)
@@ -46,7 +46,7 @@ namespace BLL.Services
         {
             _userValidationService.ValidateNewUser(_converter.ConvertToEntity(entity));
             var result =  await base.Create(entity);
-            _userCacheService.SetUserToCache(result);
+            _cacheService.Set(result.Id.ToString(), result);
             return result;
         }
 
@@ -58,11 +58,11 @@ namespace BLL.Services
 
         public override async Task<StudentViewModel> Get(Guid id)
         {
-            StudentViewModel user = _userCacheService.GetUserFromCache(id);
+            StudentViewModel user = _cacheService.Get(id.ToString());
             if (user == null)
             {
                 user = await base.Get(id);
-                _userCacheService.SetUserToCache(user);
+                _cacheService.Set(user.Id.ToString(), user);
             }
             return user;
         }

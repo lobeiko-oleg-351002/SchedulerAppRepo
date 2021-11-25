@@ -8,22 +8,23 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BLL.Caching
+namespace BLL.Caching.Base
 {
-    public class RedisUserCacheService : IUserCacheService
+    public class RedisCacheService<T> : ICacheService<T>
+        where T : ViewModel
     {
         private readonly IDistributedCache _cache;
 
         private const int EXPIRATION_TIME_MINUTES = 10;
         private const int SLIDING_EXPIRATION_TIME_MINUTES = 2;
 
-        public RedisUserCacheService(IDistributedCache distributedCache)
+        public RedisCacheService(IDistributedCache distributedCache)
         {
             _cache = distributedCache;
         }
-        public StudentViewModel GetUserFromCache(Guid userId)
+        public T Get(string id)
         {
-            var userData = _cache.Get(userId.ToString());
+            var userData = _cache.Get(id.ToString());
             try
             {
                 return DecodeObject(userData);
@@ -34,18 +35,23 @@ namespace BLL.Caching
             }
         }
 
-        private StudentViewModel DecodeObject(byte[] bytes)
+        private T DecodeObject(byte[] bytes)
         {
             var str = Encoding.UTF8.GetString(bytes);
-            return JsonConvert.DeserializeObject<StudentViewModel>(str);
+            return JsonConvert.DeserializeObject<T>(str);
         }
 
-        public void SetUserToCache(StudentViewModel user)
+        public void Set(string id, T model)
         {
             var options = new DistributedCacheEntryOptions().SetAbsoluteExpiration(DateTime.Now.AddMinutes(EXPIRATION_TIME_MINUTES)).SetSlidingExpiration(TimeSpan.FromMinutes(SLIDING_EXPIRATION_TIME_MINUTES));
-            _cache.Set(user.Id.ToString(),
-                                  Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(user)), 
-                                  options);
+            _cache.Set(id,
+                       Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(model)), 
+                       options);
+        }
+
+        public void Remove(string id)
+        {
+            _cache.Remove(id);
         }
     }
 }
