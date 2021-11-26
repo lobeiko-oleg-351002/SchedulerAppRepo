@@ -72,14 +72,13 @@ namespace SchedulerApp
                     });
 
             services.AddTransient<CacheTypeResolver>();
-            services.AddTransient<MemoryCacheService<StudentViewModel>>();
-            services.AddTransient<RedisCacheService<StudentViewModel>>();
+            services.AddTransient<MemoryCacheService>();
+            services.AddTransient<RedisCacheService>();
             services.AddStackExchangeRedisCache(options =>
             {
                 options.Configuration = appSettings.RedisHostIp;
             });
             services.AddSingleton(provider => provider.GetService<CacheTypeResolver>().Resolve());
-            services.AddSingleton<UserCacheService>();
 
 
             services.AddControllers();

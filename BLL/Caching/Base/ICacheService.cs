@@ -8,11 +8,10 @@ using System.Threading.Tasks;
 
 namespace BLL.Caching.Base
 {
-    public interface ICacheService<T>
-        where T : ViewModel
+    public interface ICacheService
     {
-        public T Get(string id);
-        public void Set(string id, T model);
-        public void Remove(string id);
+        public T Get<T>(string id, string prefix);
+        public void Set<T>(string id, T model, string prefix);
+        public void Remove(string id, string prefix);
     }
 }

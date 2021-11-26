@@ -24,17 +24,17 @@ namespace SchedulerApp.Caching
             _appSettings = appSettings;
         }
 
-        public ICacheService<StudentViewModel> Resolve()
+        public ICacheService Resolve()
         {
             string cacheType = _appSettings.CacheType;
 
-            if (cacheType == "InMemory")
-            {
-                return (ICacheService<StudentViewModel>)_serviceProvider.GetService(typeof(MemoryCacheService<StudentViewModel>));
-            }
             if (cacheType == "Distributed")
             {
-                return (ICacheService<StudentViewModel>)_serviceProvider.GetService(typeof(RedisCacheService<StudentViewModel>));
+                return (ICacheService)_serviceProvider.GetService(typeof(RedisCacheService));
+            } 
+            else
+            {
+                return (ICacheService)_serviceProvider.GetService(typeof(MemoryCacheService));
             }
             throw new Exception("Invalid Cache type");
         }

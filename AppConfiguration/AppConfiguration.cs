@@ -5,7 +5,7 @@ namespace AppConfiguration
 {
     public static class AppConfiguration
     {
-        public static AppSettings GetAppSettings(string environmentName, string filePath)
+        public static IAppSettings GetAppSettings(string environmentName, string filePath)
         {
             IConfigurationBuilder builder = new ConfigurationBuilder()
                 .SetBasePath(filePath)
@@ -14,7 +14,7 @@ namespace AppConfiguration
 
             IConfigurationRoot configuration = builder.Build();
 
-            var settings = new AppSettings();
+            IAppSettings settings = new AppSettings();
             configuration.Bind(settings);
             return settings;
         }

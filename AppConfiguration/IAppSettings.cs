@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AppConfiguration
 {
-    public class AppSettings : IAppSettings
+    public interface IAppSettings
     {
         public string ConnectionString { get; set; }
 

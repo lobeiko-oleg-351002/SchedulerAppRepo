@@ -10,8 +10,7 @@ using System.Threading.Tasks;
 
 namespace BLL.Caching.Base
 {
-    public class RedisCacheService<T> : ICacheService<T>
-        where T : ViewModel
+    public class RedisCacheService : ICacheService
     {
         private readonly IDistributedCache _cache;
 
@@ -22,36 +21,41 @@ namespace BLL.Caching.Base
         {
             _cache = distributedCache;
         }
-        public T Get(string id)
+        public T Get<T>(string id, string prefix)
         {
-            var userData = _cache.Get(id.ToString());
+            var userData = _cache.Get(GetKey(id, prefix));
             try
             {
-                return DecodeObject(userData);
+                return DecodeObject<T>(userData);
             }
             catch
             {
-                return null;
+                return default(T);
             }
         }
 
-        private T DecodeObject(byte[] bytes)
+        private T DecodeObject<T>(byte[] bytes)
         {
             var str = Encoding.UTF8.GetString(bytes);
             return JsonConvert.DeserializeObject<T>(str);
         }
 
-        public void Set(string id, T model)
+        public void Set<T>(string id, T model, string prefix)
         {
             var options = new DistributedCacheEntryOptions().SetAbsoluteExpiration(DateTime.Now.AddMinutes(EXPIRATION_TIME_MINUTES)).SetSlidingExpiration(TimeSpan.FromMinutes(SLIDING_EXPIRATION_TIME_MINUTES));
-            _cache.Set(id,
+            _cache.Set(GetKey(id, prefix),
                        Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(model)), 
                        options);
         }
 
-        public void Remove(string id)
+        public void Remove(string id, string prefix)
         {
-            _cache.Remove(id);
+            _cache.Remove(GetKey(id, prefix));
+        }
+
+        private string GetKey(string id, string prefix)
+        {
+            return prefix + id;
         }
     }
 }

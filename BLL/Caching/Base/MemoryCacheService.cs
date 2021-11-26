@@ -9,8 +9,7 @@ using System.Threading.Tasks;
 
 namespace BLL.Caching.Base
 {
-    public class MemoryCacheService<T> : ICacheService<T>
-        where T : ViewModel
+    public class MemoryCacheService : ICacheService
     {
         private const int EXPIRATION_TIME_MINUTES = 5;
 
@@ -19,21 +18,26 @@ namespace BLL.Caching.Base
         {
             _cache = cache; 
         }
-        public T Get(string id)
+        public T Get<T>(string id, string prefix)
         {
             T model;
-            _cache.TryGetValue(id, out model);
+            _cache.TryGetValue(GetKey(id, prefix), out model);
             return model;
         }
 
-        public void Remove(string id)
+        public void Remove(string id, string prefix)
         {
-            _cache.Remove(id);
+            _cache.Remove(GetKey(id, prefix));
         }
 
-        public void Set(string id, T model)
+        public void Set<T>(string id, T model, string prefix)
         {
-            _cache.Set(id, model, new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromMinutes(EXPIRATION_TIME_MINUTES)));
+            _cache.Set(GetKey(id, prefix), model, new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromMinutes(EXPIRATION_TIME_MINUTES)));
+        }
+
+        private string GetKey(string id, string prefix)
+        {
+            return prefix + id;
         }
     }
 }
