@@ -16,9 +16,9 @@ namespace SchedulerApp.Caching
     public class CacheTypeResolver
     {
         private readonly IServiceProvider _serviceProvider;
-        private readonly AppSettings _appSettings;
+        private readonly IAppSettings _appSettings;
 
-        public CacheTypeResolver(IServiceProvider serviceProvider, AppSettings appSettings)
+        public CacheTypeResolver(IServiceProvider serviceProvider, IAppSettings appSettings)
         {
             _serviceProvider = serviceProvider;
             _appSettings = appSettings;

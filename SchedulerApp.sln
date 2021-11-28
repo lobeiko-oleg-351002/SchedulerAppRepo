@@ -15,7 +15,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DAL", "DAL\DAL.csproj", "{F
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SchedulerViewModels", "SchedulerViewModels\SchedulerViewModels.csproj", "{0B111C3D-185F-4DD5-89B8-9745014D568C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppConfiguration", "AppConfiguration\AppConfiguration.csproj", "{2161A15D-4D53-4A9F-B195-D125F7EC7928}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AppConfiguration", "AppConfiguration\AppConfiguration.csproj", "{2161A15D-4D53-4A9F-B195-D125F7EC7928}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SchedulerUnitTests", "SchedulerUnitTests\SchedulerUnitTests.csproj", "{6422FB9E-C332-4B42-B0C5-2088FFB5CF33}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,10 @@ Global
 		{2161A15D-4D53-4A9F-B195-D125F7EC7928}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2161A15D-4D53-4A9F-B195-D125F7EC7928}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2161A15D-4D53-4A9F-B195-D125F7EC7928}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6422FB9E-C332-4B42-B0C5-2088FFB5CF33}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6422FB9E-C332-4B42-B0C5-2088FFB5CF33}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6422FB9E-C332-4B42-B0C5-2088FFB5CF33}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6422FB9E-C332-4B42-B0C5-2088FFB5CF33}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

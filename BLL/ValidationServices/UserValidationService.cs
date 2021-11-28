@@ -26,7 +26,7 @@ namespace BLL.ValidationServices
                 throw new UserValidationException("Role is not set");
             }
 
-            if (string.IsNullOrEmpty(user.Email) || IsEmailValid(user.Email))
+            if (string.IsNullOrEmpty(user.Email) || !IsEmailValid(user.Email))
             {
                 throw new UserValidationException("Invaild email");
             }
