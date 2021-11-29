@@ -47,7 +47,7 @@ namespace BLL.Services
         {
             _userValidationService.ValidateNewUser(_converter.ConvertToEntity(entity));
             var result =  await base.Create(entity);
-            _cacheService.Set(result.Id.ToString(), result, nameof(StudentViewModel));
+            _cacheService.Set(GetKey(result.Id.ToString()), result);
             return result;
         }
 
@@ -59,11 +59,11 @@ namespace BLL.Services
 
         public override async Task<StudentViewModel> Get(Guid id)
         {
-            StudentViewModel user = _cacheService.Get<StudentViewModel>(id.ToString(), nameof(StudentViewModel));
+            StudentViewModel user = _cacheService.Get<StudentViewModel>(GetKey(id.ToString()));
             if (user == null)
             {
                 user = await base.Get(id);
-                _cacheService.Set(user.Id.ToString(), user, nameof(StudentViewModel));
+                _cacheService.Set(GetKey(user.Id.ToString()), user);
             }
             return user;
         }

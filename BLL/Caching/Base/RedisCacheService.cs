@@ -21,9 +21,9 @@ namespace BLL.Caching.Base
         {
             _cache = distributedCache;
         }
-        public T Get<T>(string id, string prefix)
+        public T Get<T>(string key)
         {
-            var userData = _cache.Get(GetKey(id, prefix));
+            var userData = _cache.Get(key);
             try
             {
                 return DecodeObject<T>(userData);
@@ -40,22 +40,17 @@ namespace BLL.Caching.Base
             return JsonConvert.DeserializeObject<T>(str);
         }
 
-        public void Set<T>(string id, T model, string prefix)
+        public void Set<T>(string key, T model)
         {
             var options = new DistributedCacheEntryOptions().SetAbsoluteExpiration(DateTime.Now.AddMinutes(EXPIRATION_TIME_MINUTES)).SetSlidingExpiration(TimeSpan.FromMinutes(SLIDING_EXPIRATION_TIME_MINUTES));
-            _cache.Set(GetKey(id, prefix),
+            _cache.Set(key,
                        Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(model)), 
                        options);
         }
 
-        public void Remove(string id, string prefix)
+        public void Remove(string key)
         {
-            _cache.Remove(GetKey(id, prefix));
-        }
-
-        private string GetKey(string id, string prefix)
-        {
-            return prefix + id;
+            _cache.Remove(key);
         }
     }
 }

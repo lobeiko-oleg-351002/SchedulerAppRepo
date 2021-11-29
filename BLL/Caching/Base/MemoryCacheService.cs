@@ -18,26 +18,22 @@ namespace BLL.Caching.Base
         {
             _cache = cache; 
         }
-        public T Get<T>(string id, string prefix)
+        public T Get<T>(string key)
         {
             T model;
-            _cache.TryGetValue(GetKey(id, prefix), out model);
+            _cache.TryGetValue(key, out model);
             return model;
         }
 
-        public void Remove(string id, string prefix)
+        public void Remove(string key)
         {
-            _cache.Remove(GetKey(id, prefix));
+            _cache.Remove(key);
         }
 
-        public void Set<T>(string id, T model, string prefix)
+        public void Set<T>(string key, T model)
         {
-            _cache.Set(GetKey(id, prefix), model, new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromMinutes(EXPIRATION_TIME_MINUTES)));
+            _cache.Set(key, model, new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromMinutes(EXPIRATION_TIME_MINUTES)));
         }
 
-        private string GetKey(string id, string prefix)
-        {
-            return prefix + id;
-        }
     }
 }

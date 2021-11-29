@@ -10,8 +10,8 @@ namespace BLL.Caching.Base
 {
     public interface ICacheService
     {
-        public T Get<T>(string id, string prefix);
-        public void Set<T>(string id, T model, string prefix);
-        public void Remove(string id, string prefix);
+        public T Get<T>(string key);
+        public void Set<T>(string key, T model);
+        public void Remove(string key);
     }
 }

@@ -22,5 +22,7 @@ namespace BLL.Services.Interface
         void Delete(Guid id);
 
         Task<TEntity> Update(UEntity entity);
+
+        public string GetKey(string id);
     }
 }
