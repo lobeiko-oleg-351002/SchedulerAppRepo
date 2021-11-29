@@ -18,17 +18,17 @@ namespace BLL.ValidationServices
         {
             if (user == null)
             {
-                throw new UserValidationException("User is null");
+                throw new UserValidationExceptionUserIsNull();
             }
             ValidateNameAndPassword(user.Name, user.Password);
             if (user.Role == null)
             {
-                throw new UserValidationException("Role is not set");
+                throw new UserValidationExceptionRoleIsNull();
             }
 
-            if (string.IsNullOrEmpty(user.Email) || !IsEmailValid(user.Email))
+            if (!IsEmailValid(user.Email))
             {
-                throw new UserValidationException("Invaild email");
+                throw new UserValidationExceptionInvalidEmail();
             }
         }
 
@@ -36,11 +36,11 @@ namespace BLL.ValidationServices
         {
             if (string.IsNullOrEmpty(name) || (name.Length < MinFieldLength))
             {
-                throw new UserValidationException($"Name must contain at least {MinFieldLength} letters");
+                throw new UserValidationExceptionInvalidName($"Name must contain at least {MinFieldLength} letters");
             }
             if (string.IsNullOrEmpty(password) || (password.Length < MinFieldLength))
             {
-                throw new UserValidationException($"Password must contain at least {MinFieldLength} letters");
+                throw new UserValidationExceptionInvalidPassword($"Password must contain at least {MinFieldLength} letters");
             }
         }
 
@@ -52,10 +52,11 @@ namespace BLL.ValidationServices
 
                 return true;
             }
-            catch (FormatException)
+            catch (Exception)
             {
                 return false;
             }
+            
         }
     }
 }

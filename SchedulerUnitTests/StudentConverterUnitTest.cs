@@ -14,7 +14,7 @@ namespace SchedulerUnitTests
     {
         private readonly IStudentConverter _studentConverter = new StudentConverter();
 
-        public static IEnumerable<object[]> StudentEntities
+        public static IEnumerable<object[]> StudentEntitiesComplete
         {
             get
             {
@@ -26,7 +26,7 @@ namespace SchedulerUnitTests
             }
         }
 
-        public static IEnumerable<object[]> StudentCreateModels
+        public static IEnumerable<object[]> StudentCreateModelsComplete
         {
             get
             {
@@ -38,8 +38,8 @@ namespace SchedulerUnitTests
             }
         }
 
-        [Theory, MemberData(nameof(StudentEntities))]
-        public void StudentConverter_ConvertToViewModel(Student entity)
+        [Theory, MemberData(nameof(StudentEntitiesComplete))]
+        public void StudentConverter_ConvertToViewModel_SuccessFieldConverting(Student entity)
         {
             var expected = new StudentViewModel { Id = entity.Id, Name = entity.Name, Role = entity.Role };
             var actual = _studentConverter.ConvertToViewModel(entity);
@@ -49,8 +49,8 @@ namespace SchedulerUnitTests
             Assert.Equal(expected.Name, actual.Name);
         }
 
-        [Theory, MemberData(nameof(StudentCreateModels))]
-        public void StudentConverter_ConvertToEntity(StudentCreateModel createModel)
+        [Theory, MemberData(nameof(StudentCreateModelsComplete))]
+        public void StudentConverter_ConvertToEntity_SuccessFieldConverting(StudentCreateModel createModel)
         {
             var expected = new Student { Id = createModel.Id, Name = createModel.Name, Role = createModel.Role, Email = createModel.Email, Password = createModel.Password };
             var actual = _studentConverter.ConvertToEntity(createModel);
@@ -63,9 +63,15 @@ namespace SchedulerUnitTests
         }
 
         [Fact]
-        public void Test()
+        public void StudentConverter_ConvertToViewModel_EntityIsNull()
         {
-            Assert.True(true);
+            Assert.Throws<ArgumentNullException>(() => _studentConverter.ConvertToViewModel(null));
+        }
+
+        [Fact]
+        public void StudentConverter_ConvertToEntity_EntityIsNull()
+        {
+            Assert.Throws<ArgumentNullException>(() => _studentConverter.ConvertToEntity(null));
         }
     }
 }

@@ -14,6 +14,7 @@ namespace BLL.Converters
     {
         public Student ConvertToEntity(StudentCreateModel model)
         {
+            if (model == null) throw new ArgumentNullException();
             Student result = new Student
             {
                 Id = model.Id,
@@ -27,6 +28,7 @@ namespace BLL.Converters
 
         public StudentViewModel ConvertToViewModel(Student entity)
         {
+            if (entity == null) throw new ArgumentNullException();
             StudentViewModel result = new StudentViewModel
             {
                 Id = entity.Id,
