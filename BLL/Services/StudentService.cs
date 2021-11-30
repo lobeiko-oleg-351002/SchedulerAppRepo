@@ -1,4 +1,5 @@
 ﻿using BLL.Caching;
+using BLL.Caching.Base;
 using BLL.Converters;
 using BLL.Converters.Interface;
 using BLL.Exceptions;
@@ -20,12 +21,12 @@ namespace BLL.Services
     public class StudentService : Service<Student, StudentViewModel, StudentCreateModel>, IStudentService
     {
         private readonly IUserValidationService _userValidationService;
-        private readonly IUserCacheService _userCacheService;
-        public StudentService(IStudentRepository studentRepository, IStudentConverter studentConverter, IUserValidationService userValidationService, IUserCacheService userCacheService) 
+        private readonly ICacheService _cacheService;
+        public StudentService(IStudentRepository studentRepository, IStudentConverter studentConverter, IUserValidationService userValidationService, ICacheService cacheService) 
             : base(studentRepository, studentConverter)
         {
             _userValidationService = userValidationService;
-            _userCacheService = userCacheService;
+            _cacheService = cacheService;
         }
 
         public async Task<StudentViewModel> GetByNameAndPassword(string name, string password)
@@ -46,7 +47,7 @@ namespace BLL.Services
         {
             _userValidationService.ValidateNewUser(_converter.ConvertToEntity(entity));
             var result =  await base.Create(entity);
-            _userCacheService.SetUserToCache(result);
+            _cacheService.Set(GetKey(result.Id.ToString()), result);
             return result;
         }
 
@@ -58,11 +59,11 @@ namespace BLL.Services
 
         public override async Task<StudentViewModel> Get(Guid id)
         {
-            StudentViewModel user = _userCacheService.GetUserFromCache(id);
+            StudentViewModel user = _cacheService.Get<StudentViewModel>(GetKey(id.ToString()));
             if (user == null)
             {
                 user = await base.Get(id);
-                _userCacheService.SetUserToCache(user);
+                _cacheService.Set(GetKey(user.Id.ToString()), user);
             }
             return user;
         }

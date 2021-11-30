@@ -6,11 +6,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BLL.Caching
+namespace BLL.Caching.Base
 {
-    public interface IUserCacheService
+    public interface ICacheService
     {
-        public StudentViewModel GetUserFromCache(Guid userId);
-        public void SetUserToCache(StudentViewModel user);
+        public T Get<T>(string key);
+        public void Set<T>(string key, T model);
+        public void Remove(string key);
     }
 }

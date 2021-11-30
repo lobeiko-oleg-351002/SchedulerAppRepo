@@ -53,5 +53,10 @@ namespace BLL.Services
             TEntity result = await _repository.Update(_converter.ConvertToEntity(entity));
             return _converter.ConvertToViewModel(result);
         }
+
+        public string GetKey(string id)
+        {
+            return typeof(UEntity) + "_" + id;
+        }
     }
 }
