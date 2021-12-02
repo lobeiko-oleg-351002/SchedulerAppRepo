@@ -8,5 +8,16 @@ namespace SchedulerViewModels
         public string Name { get; set; }
 
         public Role Role { get; set; }
+
+        public override bool Equals(object obj)
+        {
+            var model = (StudentViewModel)obj;
+            return model.Id.Equals(Id) && (model.Name == Name);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Id, Name);
+        }
     }
 }

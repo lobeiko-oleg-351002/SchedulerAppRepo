@@ -41,7 +41,7 @@ namespace SchedulerUnitTests
 
             IStudentService service = new StudentService(mockRepository.Object, studentConverter, userValidationService, mockCacheService.Object);
             var actual = await service.Create(createModel);
-            Assert.Equal(expected.Name, actual.Name);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
@@ -62,8 +62,7 @@ namespace SchedulerUnitTests
             mockCacheService.Setup(cacheService => cacheService.Set("key", It.IsAny<Student>()));
 
             IStudentService service = new StudentService(mockRepository.Object, studentConverter, userValidationService, mockCacheService.Object);
-            var exception = Record.Exception(() => service.Create(createModel).Result);
-            Assert.Equal(typeof(ArgumentNullException), (exception.InnerException).GetType());
+            Assert.ThrowsAsync<ArgumentNullException>(() => service.Create(createModel));
         }
     }
 }
