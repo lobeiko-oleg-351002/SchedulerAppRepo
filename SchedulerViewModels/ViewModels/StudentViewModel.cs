@@ -11,6 +11,10 @@ namespace SchedulerViewModels
 
         public override bool Equals(object obj)
         {
+            if ((obj == null) || !this.GetType().Equals(obj.GetType()))
+            {
+                return false;
+            }
             var model = (StudentViewModel)obj;
             return model.Id.Equals(Id) && (model.Name == Name);
         }

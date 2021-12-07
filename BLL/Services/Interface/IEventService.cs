@@ -1,6 +1,7 @@
 ﻿using SchedulerModels;
 using SchedulerViewModels;
 using SchedulerViewModels.CreateModels;
+using SchedulerViewModels.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -47,14 +47,14 @@ namespace DAL.Repositories
             return student;
         }
 
-        public override async Task<List<Student>> GetAll()
+        public override IQueryable<Student> GetAll()
         {           
             _logMessageManager.LogGetAll();
             var elements = _context.Students.Include(role => role.Role).AsQueryable();
             if (elements.Any())
             {
                 _logMessageManager.LogSuccess();
-                return await elements.ToListAsync();
+                return elements;
             }
             var ex = new NoElementsException();
             _logMessageManager.LogFailure(ex.Message);

@@ -75,14 +75,14 @@ namespace DAL.Repositories
             throw ex;
         }
 
-        public virtual async Task<List<TEntity>> GetAll()
+        public virtual IQueryable<TEntity> GetAll()
         {
             _logMessageManager.LogGetAll();
             var elements = _context.Set<TEntity>().AsQueryable();
             if (elements.Any())
             {
                 _logMessageManager.LogSuccess();
-                return await elements.ToListAsync();
+                return elements;
             }
             var ex = new NoElementsException();
             _logMessageManager.LogFailure(ex.Message);
