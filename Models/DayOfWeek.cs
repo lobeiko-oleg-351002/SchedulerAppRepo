@@ -14,6 +14,6 @@ namespace SchedulerModels
         [Required]
         public string Name { get; set; }
 
-        public List<WeeklyEventTime> WeeklyEventTimes { get; set; }
+        public virtual List<WeeklyEventTime> WeeklyEventTimes { get; set; }
     }
 }

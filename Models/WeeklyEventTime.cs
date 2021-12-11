@@ -14,6 +14,11 @@ namespace SchedulerModels
         [Required]
         public DateTime Time { get; set; }
 
-        public List<DayOfWeek> DaysOfWeek { get; set; }
+        public virtual List<DayOfWeek> DaysOfWeek { get; set; }
+
+        public WeeklyEventTime()
+        {
+            DaysOfWeek = new List<DayOfWeek>();
+        }
     }
 }

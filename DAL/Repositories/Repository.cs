@@ -31,7 +31,7 @@ namespace DAL.Repositories
             try
             {
                 entity.Id = new Guid();
-                _logMessageManager.LogEntityCreation(entity);
+               // _logMessageManager.LogEntityCreation(entity);
                 var result = await _context.Set<TEntity>().AddAsync(entity);
                 await _context.SaveChangesAsync();
                 _logMessageManager.LogSuccess();
@@ -75,14 +75,14 @@ namespace DAL.Repositories
             throw ex;
         }
 
-        public virtual async Task<List<TEntity>> GetAll()
+        public virtual IQueryable<TEntity> GetAll()
         {
             _logMessageManager.LogGetAll();
             var elements = _context.Set<TEntity>().AsQueryable();
             if (elements.Any())
             {
                 _logMessageManager.LogSuccess();
-                return await elements.ToListAsync();
+                return elements;
             }
             var ex = new NoElementsException();
             _logMessageManager.LogFailure(ex.Message);

@@ -44,7 +44,7 @@ namespace BLL.Converters
         {
             UEvent result = new();
             result.Id = entity.Id;
-            entity.Subscribers.ForEach(item => result.Subscribers.Add(_subscriberConverter.ConvertToViewModel(item)));
+            if (entity.Subscribers != null) entity.Subscribers.ForEach(item => result.Subscribers.Add(_subscriberConverter.ConvertToViewModel(item)));
             result.EventTemplateViewModel = _eventTemplateConverter.ConvertToViewModel(entity.EventTemplate);
             result.ChiefViewModel = _chiefConverter.ConvertToViewModel(entity.Chief);
 

@@ -4,6 +4,7 @@ using DAL.Repositories.Interface;
 using SchedulerModels;
 using SchedulerViewModels;
 using SchedulerViewModels.CreateModels;
+using SchedulerViewModels.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,6 +39,17 @@ namespace BLL.Services
             //subscriber.Student = student;
             //SubscriberService.Create(subscriber);
             throw new NotImplementedException();
+        }
+
+        protected IQueryable<TEvent> GetByChiefId(Guid? chiefId, IQueryable<TEvent> query)
+        {
+            if (chiefId != null)
+            {
+                query = from entity in query
+                        where entity.Chief.Id == chiefId
+                        select entity;
+            }
+            return query;
         }
     }
 }

@@ -13,11 +13,11 @@ namespace SchedulerModels
         [Required]
         public string Profile { get; set; }
 
-        public List<Student> Students { get; set; }
+        public virtual List<Student> Students { get; set; }
 
-        public List<EventTemplate> EventTemplates { get; set; }
+        public virtual List<EventTemplate> EventTemplates { get; set; }
 
-        public List<Event> Events { get; set; }
+        public virtual List<Event> Events { get; set; }
 
         public Chief()
         {

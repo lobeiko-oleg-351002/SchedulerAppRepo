@@ -14,10 +14,11 @@ namespace BLL.Services
 {
     public class WeeklyEventTimeService : Service<WeeklyEventTime, WeeklyEventTimeViewModel, WeeklyEventTimeCreateModel>, IWeeklyEventTimeService
     {
-        public WeeklyEventTimeService(IWeeklyEventTimeRepository WeeklyEventTimeRepository, IWeeklyEventTimeConverter WeeklyEventTimeConverter) 
+        
+        public WeeklyEventTimeService(IWeeklyEventTimeRepository WeeklyEventTimeRepository, IWeeklyEventTimeConverter WeeklyEventTimeConverter, IDayOfWeekRepository dayOfWeekRepository) 
             : base(WeeklyEventTimeRepository, WeeklyEventTimeConverter)
         {
-
+            
         }
 
     }

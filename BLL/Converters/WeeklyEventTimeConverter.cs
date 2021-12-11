@@ -1,4 +1,5 @@
 ﻿using BLL.Converters.Interface;
+using DAL.Repositories.Interface;
 using SchedulerModels;
 using SchedulerViewModels;
 using SchedulerViewModels.CreateModels;
@@ -12,9 +13,10 @@ namespace BLL.Converters
 {
     public class WeeklyEventTimeConverter : IWeeklyEventTimeConverter
     {
-        public WeeklyEventTimeConverter()
+        private readonly IDayOfWeekRepository _dayOfWeekRepository;
+        public WeeklyEventTimeConverter(IDayOfWeekRepository dayOfWeekRepository)
         {
-
+            _dayOfWeekRepository = dayOfWeekRepository;
         }
         public WeeklyEventTime ConvertToEntity(WeeklyEventTimeCreateModel model)
         {
@@ -22,7 +24,7 @@ namespace BLL.Converters
 
             result.Id = model.Id;
             result.Time = model.Time;
-            model.DaysOfWeek.ForEach(item => result.DaysOfWeek.Add(item));
+            model.DaysOfWeek.ForEach(item => result.DaysOfWeek.Add(_dayOfWeekRepository.Get(item).Result));
   
             return result;
         }

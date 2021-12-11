@@ -11,7 +11,7 @@ namespace SchedulerMigrations.Data
     {
         public SchedulerDbContext(DbContextOptions<SchedulerDbContext> options) : base(options)
         {
-
+            
         }
 
         public DbSet<Chief> Chiefs { get; set; }
@@ -47,6 +47,12 @@ namespace SchedulerMigrations.Data
             modelBuilder.ApplyConfiguration(new RoleConfiguration());
             modelBuilder.ApplyConfiguration(new ChiefConfiguration());
             modelBuilder.ApplyConfiguration(new StudentConfiguration());
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder
+                .UseLazyLoadingProxies();
         }
     }
 }

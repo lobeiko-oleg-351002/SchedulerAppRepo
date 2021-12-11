@@ -30,7 +30,7 @@ namespace SchedulerApp.Controllers
             return Ok(viewModel);
         }
 
-        [Authorize(Roles = "Admin")]
+      //  [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {

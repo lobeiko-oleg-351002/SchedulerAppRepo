@@ -1,6 +1,7 @@
 ﻿using BLL.Converters.Interface;
 using BLL.Services.Interface;
 using DAL.Repositories.Interface;
+using Microsoft.EntityFrameworkCore;
 using SchedulerModels;
 using SchedulerViewModels;
 using SchedulerViewModels.CreateModels;
@@ -38,7 +39,8 @@ namespace BLL.Services
 
         public virtual async Task<List<UEntity>> GetAll()
         {
-            var entities = await _repository.GetAll();
+            var query = _repository.GetAll();
+            var entities = await query.ToListAsync();
             return entities.Select(_converter.ConvertToViewModel).ToList();
         }
 

@@ -9,5 +9,10 @@ namespace SchedulerViewModels
     public class WeeklyEventViewModel : EventViewModel
     {
         public List<WeeklyEventTimeViewModel> DateAndTime { get; set; }
+
+        public WeeklyEventViewModel()
+        {
+            DateAndTime = new List<WeeklyEventTimeViewModel>();
+        }
     }
 }

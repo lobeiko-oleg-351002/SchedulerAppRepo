@@ -9,5 +9,10 @@ namespace SchedulerViewModels.CreateModels
     public class WeeklyEventCreateModel : EventCreateModel
     {
         public List<WeeklyEventTimeCreateModel> DateAndTime { get; set; }
+
+        public WeeklyEventCreateModel()
+        {
+            DateAndTime = new List<WeeklyEventTimeCreateModel>();
+        }
     }
 }

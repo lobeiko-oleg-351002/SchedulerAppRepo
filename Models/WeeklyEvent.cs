@@ -12,6 +12,11 @@ namespace SchedulerModels
     public class WeeklyEvent : Event
     {
         [Required]
-        public List<WeeklyEventTime> DateAndTime { get; set; }
+        public virtual List<WeeklyEventTime> DateAndTime { get; set; }
+
+        public WeeklyEvent()
+        {
+            DateAndTime = new List<WeeklyEventTime>();
+        }
     }
 }

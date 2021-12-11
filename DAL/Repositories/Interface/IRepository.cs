@@ -13,7 +13,7 @@ namespace DAL.Repositories.Interface
     {
         Task<TEntity> Create(TEntity entity);
 
-        Task<List<TEntity>> GetAll();
+        IQueryable<TEntity> GetAll();
 
         Task<TEntity> Get(Guid id);
 
