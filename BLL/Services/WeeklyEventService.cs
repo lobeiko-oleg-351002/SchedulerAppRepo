@@ -15,50 +15,63 @@ namespace BLL.Services
 {
     public class WeeklyEventService : EventService<WeeklyEvent, WeeklyEventViewModel, WeeklyEventCreateModel>, IWeeklyEventService, IEventFilter<WeeklyEventViewModel>
     {
-        private readonly IWeeklyEventTimeService _weeklyEventTimeService;
-        public WeeklyEventService(IWeeklyEventRepository weeklyEventRepository, ISubscriberService subscriberService, IWeeklyEventTimeService weeklyEventTimeService, IWeeklyEventConverter weeklyEventConverter) 
+        private readonly IWeeklyEventTimeRepository _weeklyEventTimeRepository;
+        public WeeklyEventService(IWeeklyEventRepository weeklyEventRepository, ISubscriberService subscriberService, IWeeklyEventTimeRepository weeklyEventTimeRepository, IWeeklyEventConverter weeklyEventConverter) 
             : base(weeklyEventRepository, subscriberService, weeklyEventConverter)
         {
-            _weeklyEventTimeService = weeklyEventTimeService ?? throw new ArgumentNullException(nameof(_weeklyEventTimeService));
+            _weeklyEventTimeRepository = weeklyEventTimeRepository ?? throw new ArgumentNullException(nameof(_weeklyEventTimeRepository));
         }
 
         public override async Task<WeeklyEventViewModel> Create(WeeklyEventCreateModel entity)
         {
-            foreach(var dateAndTime in entity.DateAndTime)
+            var model = _converter.ConvertToEntity(entity);
+            var list = new List<WeeklyEventTime>();
+            foreach (var dateAndTime in model.DateAndTime)
             {
-                var model = await _weeklyEventTimeService.Create(dateAndTime);
-                dateAndTime.Id = model.Id;
+                list.Add(_weeklyEventTimeRepository.Create(dateAndTime).Result);
             }
-            
-            return await base.Create(entity);
+            model.DateAndTime = list;
+
+            var result = await _repository.Create(model);
+            return _converter.ConvertToViewModel(result);
         }
 
         public List<WeeklyEventViewModel> GetByChiefIdAndDateTimeRange(Guid? chiefId, DateTimeRange range)
         {
-            var query = _repository.GetAll();
+            var allEntities = _repository.GetAll();
 
-            query = GetByChiefId(chiefId, query);
+            var query = GetByChiefId(chiefId, allEntities).AsEnumerable();  //client evaluation, because the following "daysOfWeekFromInputRange" requires a load to memory
 
-            var daysOfWeek = GetDaysOfWeek(range);
+
+            var daysOfWeekFromInputRange = GetDaysOfWeek(range).AsQueryable();
 
             if (range != null)
             {
                 query = from entity in query
-                        where (from dateTime in entity.DateAndTime
-                                   from dayOfWeek in dateTime.DaysOfWeek
-                                   join item in daysOfWeek on dayOfWeek.Name equals item
-                                   select new { Name = item }) != null
+                        where
+                            (from dateTime in entity.DateAndTime
+                                 from dayOfWeek in dateTime.DaysOfWeek
+                                     join item in daysOfWeekFromInputRange on dayOfWeek.Name equals item
+                                  // from requestedDay in daysOfWeekFromInputRange
+                                  // where requestedDay == dayOfWeek.Name
+                             select dateTime).Any()                                                     
                         select entity;
             }
-            return query.Select(_converter.ConvertToViewModel).ToList();
+            var result = query.ToList();
+            return result.Select(_converter.ConvertToViewModel).ToList();
         }
 
         private List<string> GetDaysOfWeek(DateTimeRange range)
         {
             List<string> result = new List<string>();
-            while (range.Start <= range.End)
+            const int DaysInWeekCount = 7;
+            while ((range.Start <= range.End) || (result.Count < DaysInWeekCount))
             {
-                result.Add(range.Start.DayOfWeek.ToString());
+                string day = range.Start.DayOfWeek.ToString();
+                if (!result.Contains(day))
+                {
+                    result.Add(range.Start.DayOfWeek.ToString());
+                }
                 range.Start = range.Start.AddDays(1);
             }
             return result;

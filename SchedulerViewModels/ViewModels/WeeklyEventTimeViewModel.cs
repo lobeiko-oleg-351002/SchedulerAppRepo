@@ -11,5 +11,10 @@ namespace SchedulerViewModels
         public DateTime Time { get; set; }
 
         public List<SchedulerModels.DayOfWeek> DaysOfWeek { get; set; }
+
+        public WeeklyEventTimeViewModel()
+        {
+            DaysOfWeek = new List<SchedulerModels.DayOfWeek>();
+        }
     }
 }

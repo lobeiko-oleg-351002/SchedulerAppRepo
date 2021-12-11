@@ -19,11 +19,11 @@ namespace SchedulerModels
         [Required]
         public string Password { get; set; }
 
-        public List<Subscriber> Subscribers { get; set; }
+        public virtual List<Subscriber> Subscribers { get; set; }
 
-        public List<Chief> Chiefs { get; set; }
+        public virtual List<Chief> Chiefs { get; set; }
 
-        public Role Role { get; set; }
+        public virtual Role Role { get; set; }
 
     }
 }

@@ -56,6 +56,11 @@ namespace SchedulerApp
             var appSettings = AppConfiguration.AppConfiguration.GetAppSettings(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"), Directory.GetCurrentDirectory());
             services.AddSingleton(x => appSettings);
 
+            services.AddControllers()
+                .AddNewtonsoftJson(options =>
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+               );
+
             services.AddDbContext<SchedulerDbContext>(options =>
                 options.UseSqlServer(appSettings.ConnectionString));
             services.AddDatabaseDeveloperPageExceptionFilter();
@@ -92,6 +97,33 @@ namespace SchedulerApp
             services.AddScoped<IChiefRepository, ChiefRepository>();
             services.AddScoped<IChiefConverter, ChiefConverter>();
             services.AddScoped<IChiefService, ChiefService>();
+
+            services.AddScoped<ILogMessageManager<EventTemplate>, LogMessageManager<EventTemplate>>();
+            services.AddScoped<IEventTemplateRepository, EventTemplateRepository>();
+            services.AddScoped<IEventTemplateConverter, EventTemplateConverter>();
+            services.AddScoped<IEventTemplateService, EventTemplateService>();
+
+            services.AddScoped<ILogMessageManager<Subscriber>, LogMessageManager<Subscriber>>();
+            services.AddScoped<ISubscriberRepository, SubscriberRepository>();
+            services.AddScoped<ISubscriberConverter, SubscriberConverter>();
+            services.AddScoped<ISubscriberService, SubscriberService>();
+
+            services.AddScoped<ILogMessageManager<SingleEvent>, LogMessageManager<SingleEvent>>();
+            services.AddScoped<ISingleEventRepository, SingleEventRepository>();
+            services.AddScoped<ISingleEventConverter, SingleEventConverter>();
+            services.AddScoped<ISingleEventService, SingleEventService>();
+
+            services.AddScoped<ILogMessageManager<WeeklyEventTime>, LogMessageManager<WeeklyEventTime>>();
+            services.AddScoped<ILogMessageManager<SchedulerModels.DayOfWeek>, LogMessageManager<SchedulerModels.DayOfWeek>>();
+            services.AddScoped<IDayOfWeekRepository, DayOfWeekRepository>();
+            services.AddScoped<IWeeklyEventTimeRepository, WeeklyEventTimeRepository>();
+            services.AddScoped<IWeeklyEventTimeConverter, WeeklyEventTimeConverter>();
+            services.AddScoped<IWeeklyEventTimeService, WeeklyEventTimeService>();
+
+            services.AddScoped<ILogMessageManager<WeeklyEvent>, LogMessageManager<WeeklyEvent>>();
+            services.AddScoped<IWeeklyEventRepository, WeeklyEventRepository>();
+            services.AddScoped<IWeeklyEventConverter, WeeklyEventConverter>();
+            services.AddScoped<IWeeklyEventService, WeeklyEventService>();
 
             services.AddSwaggerGen(c =>
             {

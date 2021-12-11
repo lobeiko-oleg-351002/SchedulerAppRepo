@@ -13,8 +13,8 @@ namespace SchedulerModels
         [Required]
         public bool IsConfirmed { get; set; }
 
-        public Event Event { get; set; }
+        public virtual Event Event { get; set; }
 
-        public Student Student {get; set;}
+        public virtual Student Student {get; set;}
     }
 }

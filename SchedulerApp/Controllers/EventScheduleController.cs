@@ -22,12 +22,12 @@ namespace SchedulerApp.Controllers
             _weeklyEventService = weeklyEventService;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetAllByChiefIdAndDateRange(Guid chiefId, DateTimeRange range)
+        [HttpPost]
+        public IActionResult GetAllByChiefIdAndDateRange(Guid chiefId, DateTimeRange range)
         {
             var singleEvents = ((IEventFilter<SingleEventViewModel>)_singleEventService).GetByChiefIdAndDateTimeRange(chiefId, range);
             var weeklyEvents = ((IEventFilter<WeeklyEventViewModel>)_weeklyEventService).GetByChiefIdAndDateTimeRange(chiefId, range);
-            return Ok(singleEvents);
+            return Ok(weeklyEvents);
         }
     }
 }

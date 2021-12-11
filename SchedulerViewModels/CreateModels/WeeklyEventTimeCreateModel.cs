@@ -10,6 +10,11 @@ namespace SchedulerViewModels.CreateModels
     {
         public DateTime Time { get; set; }
 
-        public List<SchedulerModels.DayOfWeek> DaysOfWeek { get; set; }
+        public List<Guid> DaysOfWeek { get; set; }
+
+        public WeeklyEventTimeCreateModel()
+        {
+            DaysOfWeek = new List<Guid>();
+        }
     }
 }

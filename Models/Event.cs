@@ -10,9 +10,9 @@ namespace SchedulerModels
     [Table("Event")]
     public class Event : Entity
     {
-        public EventTemplate EventTemplate { get; set; }
-        public List<Subscriber> Subscribers { get; set; }
+        public virtual EventTemplate EventTemplate { get; set; }
+        public virtual List<Subscriber> Subscribers { get; set; }
 
-        public Chief Chief { get; set; }
+        public virtual Chief Chief { get; set; }
     }
 }
